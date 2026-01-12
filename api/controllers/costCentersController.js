@@ -1,4 +1,5 @@
 const db = require('../db');
+const { logAction } = require('../utils/logger');
 
 exports.findAll = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -69,6 +70,11 @@ exports.create = async (req, res) => {
 
     try {
         const [result] = await db.query('INSERT INTO cost_centers (name, type) VALUES (?, ?)', [name, costCenterType]);
+
+        // LOG CREATE
+        const logData = { name, type: costCenterType };
+        await logAction(req.userId, 'CREATE', 'cost_center', result.insertId, logData, req.ip);
+
         res.status(201).send({ message: "Cost center created", id: result.insertId });
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -80,7 +86,16 @@ exports.update = async (req, res) => {
     if (!name) return res.status(400).send({ message: "Name is required" });
 
     try {
+        // Fetch current state for log
+        const [oldRows] = await db.query('SELECT name, type FROM cost_centers WHERE id = ?', [req.params.id]);
+        const oldData = oldRows[0];
+
         await db.query('UPDATE cost_centers SET name = ?, type = ? WHERE id = ?', [name, type || 'expense', req.params.id]);
+
+        // LOG UPDATE
+        const newData = { name, type: type || 'expense' };
+        await logAction(req.userId, 'UPDATE', 'cost_center', req.params.id, { old: oldData, new: newData }, req.ip);
+
         res.status(200).send({ message: "Cost center updated" });
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -95,7 +110,15 @@ exports.delete = async (req, res) => {
             return res.status(400).send({ message: "Cannot delete cost center in use" });
         }
 
+        // Fetch data before deletion for logging
+        const [deletedRows] = await db.query('SELECT name, type FROM cost_centers WHERE id = ?', [req.params.id]);
+        const deletedData = deletedRows.length > 0 ? deletedRows[0] : null;
+
         await db.query('DELETE FROM cost_centers WHERE id = ?', [req.params.id]);
+
+        // LOG DELETE
+        await logAction(req.userId, 'DELETE', 'cost_center', req.params.id, deletedData, req.ip);
+
         res.status(200).send({ message: "Cost center deleted" });
     } catch (error) {
         res.status(500).send({ message: error.message });

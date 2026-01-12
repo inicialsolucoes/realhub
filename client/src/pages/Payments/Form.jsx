@@ -107,7 +107,7 @@ export default function PaymentForm() {
                         </select>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label className="label">{t('payments.form.amount')}</label>
                             <input
@@ -131,7 +131,7 @@ export default function PaymentForm() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label className="label">{t('payments.form.type')}</label>
                             <select

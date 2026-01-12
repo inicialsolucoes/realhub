@@ -118,79 +118,81 @@ export default function PaymentsList() {
             </div>
 
             <div className="card overflow-hidden">
-                <table className="w-full text-left border-collapse">
-                    <thead>
-                        <tr className="bg-slate-50 border-b border-slate-100 text-xs text-slate-500 uppercase">
-                            <th className="p-4 font-semibold">{t('payments.table.cost_center')}</th>
-                            <th className="p-4 font-semibold">{t('payments.table.type')}</th>
-                            <th className="p-4 font-semibold">{t('payments.table.amount')}</th>
-                            <th className="p-4 font-semibold">{t('payments.table.date')}</th>
-                            <th className="p-4 font-semibold">{t('payments.table.unit')}</th>
-                            <th className="p-4 font-semibold text-right">{t('payments.table.actions')}</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                        {loading && (
-                            <tr><td colSpan="5" className="p-8 text-center text-slate-500">{t('common.loading')}</td></tr>
-                        )}
-                        {!loading && payments.map(payment => (
-                            <tr
-                                key={payment.id}
-                                onClick={() => navigate(`/payments/${payment.id}`)}
-                                className="hover:bg-slate-50/50 transition-colors cursor-pointer"
-                            >
-                                <td className="p-4 text-slate-600 text-sm">
-                                    {payment.cost_center_name || '-'}
-                                </td>
-                                <td className="p-4">
-                                    {payment.type === 'income' ? (
-                                        <span className="inline-flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full text-xs font-medium">
-                                            <TrendingUp className="w-3 h-3" /> {t('payments.income')}
-                                        </span>
-                                    ) : (
-                                        <span className="inline-flex items-center gap-1 text-red-600 bg-red-50 px-2 py-1 rounded-full text-xs font-medium">
-                                            <TrendingDown className="w-3 h-3" /> {t('payments.expense')}
-                                        </span>
-                                    )}
-                                </td>
-                                <td className={`p-4 font-bold ${payment.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
-                                    R$ {parseFloat(payment.amount).toFixed(2)}
-                                </td>
-                                <td className="p-4 text-slate-500 text-sm">
-                                    {new Date(payment.date).toLocaleDateString()}
-                                </td>
-                                <td className="p-4">
-                                    {payment.quadra ? (
-                                        <div className="flex items-center gap-2 text-slate-700 bg-slate-100 px-2 py-1 rounded text-sm w-fit">
-                                            <Building2 className="w-3 h-3" />
-                                            <span>Q{payment.quadra} L{payment.lote} {payment.casa ? `C${payment.casa}` : ''}</span>
-                                        </div>
-                                    ) : (
-                                        <span className="text-xs text-slate-400 italic">{t('payments.table.no_unit')}</span>
-                                    )}
-                                </td>
-                                <td className="p-4 text-right space-x-2">
-                                    {(user.role === 'admin' || user.id === payment.user_id) && (
-                                        <>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); navigate(`/payments/${payment.id}/edit`); }}
-                                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                            >
-                                                <Edit className="w-4 h-4" />
-                                            </button>
-                                            <button
-                                                onClick={(e) => handleDelete(e, payment.id)}
-                                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
-                                        </>
-                                    )}
-                                </td>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse min-w-[700px] md:min-w-full">
+                        <thead>
+                            <tr className="bg-slate-50 border-b border-slate-100 text-xs text-slate-500 uppercase">
+                                <th className="p-4 font-semibold">{t('payments.table.cost_center')}</th>
+                                <th className="p-4 font-semibold hidden sm:table-cell">{t('payments.table.type')}</th>
+                                <th className="p-4 font-semibold">{t('payments.table.amount')}</th>
+                                <th className="p-4 font-semibold hidden md:table-cell">{t('payments.table.date')}</th>
+                                <th className="p-4 font-semibold hidden lg:table-cell">{t('payments.table.unit')}</th>
+                                <th className="p-4 font-semibold text-right">{t('payments.table.actions')}</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {loading && (
+                                <tr><td colSpan="5" className="p-8 text-center text-slate-500">{t('common.loading')}</td></tr>
+                            )}
+                            {!loading && payments.map(payment => (
+                                <tr
+                                    key={payment.id}
+                                    onClick={() => navigate(`/payments/${payment.id}`)}
+                                    className="hover:bg-slate-50/50 transition-colors cursor-pointer"
+                                >
+                                    <td className="p-4 text-slate-600 text-sm">
+                                        {payment.cost_center_name || '-'}
+                                    </td>
+                                    <td className="p-4 hidden sm:table-cell">
+                                        {payment.type === 'income' ? (
+                                            <span className="inline-flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full text-xs font-medium">
+                                                <TrendingUp className="w-3 h-3" /> {t('payments.income')}
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex items-center gap-1 text-red-600 bg-red-50 px-2 py-1 rounded-full text-xs font-medium">
+                                                <TrendingDown className="w-3 h-3" /> {t('payments.expense')}
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td className={`p-4 font-bold ${payment.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
+                                        R$ {parseFloat(payment.amount).toFixed(2)}
+                                    </td>
+                                    <td className="p-4 text-slate-500 text-sm hidden md:table-cell">
+                                        {new Date(payment.date).toLocaleDateString()}
+                                    </td>
+                                    <td className="p-4 hidden lg:table-cell">
+                                        {payment.quadra ? (
+                                            <div className="flex items-center gap-2 text-slate-700 bg-slate-100 px-2 py-1 rounded text-sm w-fit">
+                                                <Building2 className="w-3 h-3" />
+                                                <span>Q{payment.quadra} L{payment.lote} {payment.casa ? `C${payment.casa}` : ''}</span>
+                                            </div>
+                                        ) : (
+                                            <span className="text-xs text-slate-400 italic">{t('payments.table.no_unit')}</span>
+                                        )}
+                                    </td>
+                                    <td className="p-4 text-right space-x-2">
+                                        {(user.role === 'admin' || user.id === payment.user_id) && (
+                                            <>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); navigate(`/payments/${payment.id}/edit`); }}
+                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                >
+                                                    <Edit className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => handleDelete(e, payment.id)}
+                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
                 {!loading && payments.length === 0 && (
                     <div className="p-8 text-center text-slate-500">{t('payments.table.no_results')}</div>
                 )}

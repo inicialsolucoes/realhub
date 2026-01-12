@@ -1,5 +1,6 @@
 const db = require('../db');
 const bcrypt = require('bcrypt');
+const { logAction } = require('../utils/logger');
 
 exports.findAll = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -92,7 +93,6 @@ exports.create = async (req, res) => {
     const { name, email, password, phone, unit_id, role } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 8);
-        // Role can be set by admin, otherwise default to user
         const userRole = role || 'user';
         const [result] = await db.execute(
             'INSERT INTO users (name, email, password, phone, role, unit_id) VALUES (?, ?, ?, ?, ?, ?)',
@@ -107,6 +107,10 @@ exports.create = async (req, res) => {
             }
         }
 
+        // LOG CREATE
+        const logData = { name, email, phone, role: userRole, unit_id, cost_center_ids: req.body.cost_center_ids };
+        await logAction(req.userId, 'CREATE', 'user', userId, logData, req.ip);
+
         res.status(201).send({ message: 'User created successfully', id: userId });
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
@@ -119,21 +123,15 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     const id = req.params.id === 'me' ? req.userId : req.params.id;
 
-    // Check permission: Admin or Self
     if (req.userRole !== 'admin' && parseInt(id) !== req.userId) {
         return res.status(403).send({ message: "Unauthorized" });
     }
 
-    const { name, email, phone, unit_id } = req.body;
-    // Password updates should likely be a separate endpoint or handled carefully, skipping here for simplicity unless provided
-    // Also, User cannot update their own Role or Unit (unless Logic allows, spec says "Editar seus dados... Visualizar a qual unidade ele está vinculado")
-    // Usually Morador cannot change their Unit, only Admin.
-
+    const { name, email, phone } = req.body;
     let query = "UPDATE users SET name = ?, email = ?, phone = ?";
     let params = [name, email, phone];
 
     if (req.userRole === 'admin') {
-        // Admin can update unit_id and role if provided
         if (req.body.role) { query += ", role = ?"; params.push(req.body.role); }
         if (req.body.unit_id !== undefined) { query += ", unit_id = ?"; params.push(req.body.unit_id); }
     }
@@ -142,17 +140,22 @@ exports.update = async (req, res) => {
     params.push(id);
 
     try {
+        // Fetch current state for log
+        const [oldRows] = await db.execute('SELECT name, email, phone, role, unit_id FROM users WHERE id = ?', [id]);
+        const oldData = oldRows[0];
+
         await db.execute(query, params);
 
-        // Sync cost centers if provided and admin
         if (req.userRole === 'admin' && req.body.cost_center_ids !== undefined && Array.isArray(req.body.cost_center_ids)) {
-            // Delete old links
             await db.execute('DELETE FROM user_cost_centers WHERE user_id = ?', [id]);
-            // Insert new links
             for (const ccId of req.body.cost_center_ids) {
                 await db.execute('INSERT INTO user_cost_centers (user_id, cost_center_id) VALUES (?, ?)', [id, ccId]);
             }
         }
+
+        // LOG UPDATE
+        const newData = { name, email, phone, role: req.body.role || oldData.role, unit_id: req.body.unit_id !== undefined ? req.body.unit_id : oldData.unit_id, cost_center_ids: req.body.cost_center_ids };
+        await logAction(req.userId, 'UPDATE', 'user', id, { old: oldData, new: newData }, req.ip);
 
         res.status(200).send({ message: "User updated successfully" });
     } catch (error) {
@@ -162,7 +165,16 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
+        // Fetch data before deletion for logging
+        const [rows] = await db.execute('SELECT name, email, phone, role, unit_id FROM users WHERE id = ?', [req.params.id]);
+        if (rows.length === 0) return res.status(404).send({ message: "User not found" });
+        const deletedData = rows[0];
+
         await db.execute('DELETE FROM users WHERE id = ?', [req.params.id]);
+
+        // LOG DELETE
+        await logAction(req.userId, 'DELETE', 'user', req.params.id, deletedData, req.ip);
+
         res.status(200).send({ message: "User deleted successfully" });
     } catch (error) {
         res.status(500).send({ message: error.message });

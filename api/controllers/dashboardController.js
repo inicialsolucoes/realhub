@@ -49,3 +49,19 @@ exports.getStats = async (req, res) => {
         res.status(500).send({ message: error.message });
     }
 };
+
+exports.getActivities = async (req, res) => {
+    try {
+        const query = `
+            SELECT al.*, u.name as user_name 
+            FROM activity_logs al 
+            LEFT JOIN users u ON al.user_id = u.id 
+            ORDER BY al.created_at DESC 
+            LIMIT 10
+        `;
+        const [rows] = await db.query(query);
+        res.status(200).send(rows);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+};

@@ -69,7 +69,6 @@ export default function UnitForm() {
                             <label className="label">{t('units.filters.lote')}</label>
                             <input
                                 className="input"
-                                type="number"
                                 value={formData.lote}
                                 onChange={e => setFormData({ ...formData, lote: e.target.value })}
                                 required
@@ -81,7 +80,6 @@ export default function UnitForm() {
                         <label className="label">{t('units.filters.casa')}</label>
                         <input
                             className="input"
-                            type="number"
                             value={formData.casa}
                             onChange={e => setFormData({ ...formData, casa: e.target.value })}
                             required

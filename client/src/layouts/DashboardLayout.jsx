@@ -1,6 +1,6 @@
 import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Users, Building2, Wallet, LogOut, Menu, X, Folder } from 'lucide-react';
+import { LayoutDashboard, Users, Building2, Wallet, LogOut, Menu, X, Folder, ClipboardList } from 'lucide-react';
 import { useState } from 'react';
 import { clsx } from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +20,7 @@ export default function DashboardLayout() {
         { label: t('app.units'), icon: Building2, path: '/units', roles: ['admin', 'user'] },
         { label: t('app.payments'), icon: Wallet, path: '/payments', roles: ['admin', 'user'] },
         { label: t('app.cost_centers') || 'Centros de Custos', icon: Folder, path: '/cost-centers', roles: ['admin'] },
+        { label: t('app.logs') || 'Logs de Atividade', icon: ClipboardList, path: '/logs', roles: ['admin'] },
     ];
 
     const filteredNav = navItems.filter(item => item.roles.includes(user?.role));

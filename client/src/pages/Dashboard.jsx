@@ -1,19 +1,31 @@
 import { useState, useEffect } from 'react';
-import { Building2, Wallet, Users, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Building2, Wallet, Users, ArrowUpRight, ArrowDownRight, Clock, Plus, Edit2, Trash2, LogIn, Key, UserPlus, LogOut } from 'lucide-react';
 import api from '../lib/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useTranslation } from '../context/TranslationContext';
 
 export default function Dashboard() {
     const [statsData, setStatsData] = useState({ units: 0, residents: 0, income: 0, expense: 0, history: [] });
+    const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
     const { t } = useTranslation();
 
     useEffect(() => {
-        api.get('/dashboard/stats')
-            .then(({ data }) => setStatsData(data))
-            .catch(console.error)
-            .finally(() => setLoading(false));
+        const fetchData = async () => {
+            try {
+                const [statsRes, activitiesRes] = await Promise.all([
+                    api.get('/dashboard/stats'),
+                    api.get('/dashboard/activity-logs')
+                ]);
+                setStatsData(statsRes.data);
+                setActivities(activitiesRes.data);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
     }, []);
 
     const formatCurrencyShort = (val) => new Intl.NumberFormat('pt-BR', { notation: 'compact', maximumFractionDigits: 1 }).format(val);
@@ -111,8 +123,51 @@ export default function Dashboard() {
                 <div className="card h-64 flex flex-col justify-center items-center text-slate-400">
                     <p>{t('dashboard.cash_flow_report_soon')}</p>
                 </div>
-                <div className="card h-64 flex flex-col justify-center items-center text-slate-400">
-                    <p>{t('dashboard.recent_activities_soon')}</p>
+                <div className="card max-h-[400px] overflow-hidden flex flex-col">
+                    <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <Clock className="w-5 h-5 text-primary" /> {t('dashboard.recent_activities')}
+                    </h2>
+                    <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4">
+                        {activities.length > 0 ? (
+                            activities.map((activity) => {
+                                const getActionInfo = (action) => {
+                                    switch (action) {
+                                        case 'CREATE': return { icon: Plus, color: 'text-emerald-500', bg: 'bg-emerald-50' };
+                                        case 'UPDATE': return { icon: Edit2, color: 'text-blue-500', bg: 'bg-blue-50' };
+                                        case 'DELETE': return { icon: Trash2, color: 'text-red-500', bg: 'bg-red-50' };
+                                        case 'LOGIN': return { icon: LogIn, color: 'text-indigo-500', bg: 'bg-indigo-50' };
+                                        case 'LOGOUT': return { icon: LogOut, color: 'text-slate-500', bg: 'bg-slate-50' };
+                                        case 'REGISTER': return { icon: UserPlus, color: 'text-emerald-500', bg: 'bg-emerald-50' };
+                                        case 'FORGOT_PASSWORD_REQUEST': return { icon: Key, color: 'text-amber-500', bg: 'bg-amber-50' };
+                                        default: return { icon: Clock, color: 'text-slate-400', bg: 'bg-slate-50' };
+                                    }
+                                };
+                                const info = getActionInfo(activity.action);
+                                return (
+                                    <div key={activity.id} className="flex gap-3">
+                                        <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center ${info.bg} ${info.color}`}>
+                                            <info.icon className="w-4 h-4" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm text-slate-700 leading-tight">
+                                                <span className="font-bold text-slate-900">{activity.user_name || t('common.system')}</span>
+                                                {' '}{activity.action.toLowerCase().replace(/_/g, ' ')}
+                                                {activity.entity_type && <span className="text-slate-500"> {t(`entities.${activity.entity_type}`)}</span>}
+                                            </p>
+                                            <p className="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider">
+                                                {new Date(activity.created_at).toLocaleString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                            </p>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div className="h-full flex flex-col justify-center items-center text-slate-400 py-12">
+                                <Clock className="w-12 h-12 mb-2 opacity-20" />
+                                <p>{t('dashboard.no_recent_activities')}</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

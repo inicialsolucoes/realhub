@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../lib/api';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Edit, Trash2, FileText, Download, Building2, Mail, Phone } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, FileText, Download, Building2, Mail, Phone, TrendingUp, TrendingDown } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../context/TranslationContext';
 
@@ -65,29 +65,37 @@ export default function PaymentDetails() {
                 <div className="lg:col-span-1 space-y-6">
                     <div className="card p-6 space-y-4">
                         <div>
-                            <span className="text-xs font-semibold text-slate-500 uppercase">{t('payments.table.value')}</span>
+                            <span className="text-xs font-semibold text-slate-500 uppercase">{t('payments.details.amount')}</span>
                             <p className={`text-3xl font-bold mt-1 ${payment.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
                                 R$ {parseFloat(payment.amount).toFixed(2)}
                             </p>
                         </div>
                         <div>
-                            <span className="text-xs font-semibold text-slate-500 uppercase">{t('payments.table.type')}</span>
-                            <p className="font-medium text-slate-800 capitalize">
-                                {payment.type === 'income' ? t('payments.income') : t('payments.expense')}
-                            </p>
+                            <span className="text-xs font-semibold text-slate-500 uppercase">{t('payments.details.type')}</span>
+                            <div className="mt-1">
+                                {payment.type === 'income' ? (
+                                    <span className="inline-flex items-center gap-1.5 text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full text-xs font-semibold">
+                                        <TrendingUp className="w-3.5 h-3.5" /> {t('payments.income')}
+                                    </span>
+                                ) : (
+                                    <span className="inline-flex items-center gap-1.5 text-red-600 bg-red-50 px-2.5 py-1 rounded-full text-xs font-semibold">
+                                        <TrendingDown className="w-3.5 h-3.5" /> {t('payments.expense')}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                         <div>
-                            <span className="text-xs font-semibold text-slate-500 uppercase">{t('payments.table.description')}</span>
+                            <span className="text-xs font-semibold text-slate-500 uppercase">{t('payments.details.description')}</span>
                             <p className="text-slate-700 bg-slate-50 p-3 rounded-lg mt-1 text-sm">{payment.description}</p>
                         </div>
                         <div>
-                            <span className="text-xs font-semibold text-slate-500 uppercase">{t('cost_centers.table.name')}</span>
+                            <span className="text-xs font-semibold text-slate-500 uppercase">{t('payments.details.cost_center')}</span>
                             <p className="font-medium text-slate-800 mt-1 capitalize">
                                 {payment.cost_center_name || '-'}
                             </p>
                         </div>
                         <div>
-                            <span className="text-xs font-semibold text-slate-500 uppercase">{t('units.table.casa')}</span>
+                            <span className="text-xs font-semibold text-slate-500 uppercase">{t('payments.details.unit')}</span>
                             <div className="mt-1">
                                 {payment.quadra ? (
                                     <div className="space-y-3">

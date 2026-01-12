@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../context/TranslationContext';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Building2 } from 'lucide-react';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -31,8 +31,12 @@ export default function Login() {
         <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                 <div className="text-center mb-8">
-                    <div className="w-12 h-12 bg-primary rounded-xl mx-auto flex items-center justify-center mb-4">
-                        <span className="text-white font-bold text-xl">R</span>
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                            <Building2 className="w-5 h-5 text-white" />
+                        </div>
+                        <h1 className="text-xl font-bold tracking-tight">RealHub</h1>
+                        <p className="mt-2 text-xs text-slate-400 uppercase tracking-wider font-medium">Residencial Costa Real 1</p>
                     </div>
                     <h2 className="text-2xl font-bold text-slate-800">{t('auth.login_title')}</h2>
                     <p className="text-slate-500 mt-2">{t('auth.login_subtitle')}</p>

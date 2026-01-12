@@ -14,6 +14,9 @@ import PaymentDetails from './pages/Payments/Details';
 import PaymentForm from './pages/Payments/Form';
 import CostCentersList from './pages/CostCenters/List';
 import CostCenterForm from './pages/CostCenters/Form';
+import LogsList from './pages/Logs/List';
+import LogDetails from './pages/Logs/Details';
+import ForgotPassword from './pages/ForgotPassword';
 import { Loader2 } from 'lucide-react';
 
 function PrivateRoute({ children }) {
@@ -33,10 +36,6 @@ function PrivateRoute({ children }) {
 
   return children;
 }
-
-import ForgotPassword from './pages/ForgotPassword';
-
-// ... (other imports)
 
 export default function App() {
   return (
@@ -70,10 +69,14 @@ export default function App() {
         <Route path="payments/:id" element={<PaymentDetails />} />
         <Route path="payments/:id/edit" element={<PaymentForm />} />
 
-        {/* Cost Centers Routes - Admin Only - Ideally wrap in another check */}
+        {/* Cost Centers Routes */}
         <Route path="cost-centers" element={<CostCentersList />} />
         <Route path="cost-centers/new" element={<CostCenterForm />} />
         <Route path="cost-centers/:id/edit" element={<CostCenterForm />} />
+
+        {/* Activity Logs Routes */}
+        <Route path="logs" element={<LogsList />} />
+        <Route path="logs/:id" element={<LogDetails />} />
       </Route>
     </Routes>
   );

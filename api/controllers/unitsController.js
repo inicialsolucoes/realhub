@@ -1,4 +1,5 @@
 const db = require('../db');
+const { logAction } = require('../utils/logger');
 
 exports.findAll = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -72,6 +73,11 @@ exports.create = async (req, res) => {
             'INSERT INTO units (quadra, lote, casa, observacao) VALUES (?, ?, ?, ?)',
             [quadra, lote, casa, observacao]
         );
+
+        // LOG CREATE
+        const logData = { quadra, lote, casa, observacao };
+        await logAction(req.userId, 'CREATE', 'unit', result.insertId, logData, req.ip);
+
         res.status(201).send({ message: "Unit created", id: result.insertId });
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -81,10 +87,19 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
     const { quadra, lote, casa, observacao } = req.body;
     try {
+        // Fetch current state for log
+        const [oldRows] = await db.execute('SELECT quadra, lote, casa, observacao FROM units WHERE id = ?', [req.params.id]);
+        const oldData = oldRows[0];
+
         await db.execute(
             'UPDATE units SET quadra = ?, lote = ?, casa = ?, observacao = ? WHERE id = ?',
             [quadra, lote, casa, observacao, req.params.id]
         );
+
+        // LOG UPDATE
+        const newData = { quadra, lote, casa, observacao };
+        await logAction(req.userId, 'UPDATE', 'unit', req.params.id, { old: oldData, new: newData }, req.ip);
+
         res.status(200).send({ message: "Unit updated" });
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -93,7 +108,15 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
+        // Fetch data before deletion for logging
+        const [rows] = await db.execute('SELECT quadra, lote, casa, observacao FROM units WHERE id = ?', [req.params.id]);
+        const deletedData = rows.length > 0 ? rows[0] : null;
+
         await db.execute('DELETE FROM units WHERE id = ?', [req.params.id]);
+
+        // LOG DELETE
+        await logAction(req.userId, 'DELETE', 'unit', req.params.id, deletedData, req.ip);
+
         res.status(200).send({ message: "Unit deleted" });
     } catch (error) {
         res.status(500).send({ message: error.message });

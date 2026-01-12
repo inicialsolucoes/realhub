@@ -102,62 +102,64 @@ export default function UnitsList() {
             </div>
 
             <div className="card overflow-hidden">
-                <table className="w-full text-left border-collapse">
-                    <thead>
-                        <tr className="bg-slate-50 border-b border-slate-100 text-xs text-slate-500 uppercase">
-                            <th className="p-4 font-semibold">{t('units.table.identification')}</th>
-                            <th className="p-4 font-semibold text-center">{t('units.table.residents')}</th>
-                            <th className="p-4 font-semibold text-right">{t('common.actions')}</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                        {loading && (
-                            <tr><td colSpan="3" className="p-8 text-center text-slate-500">{t('common.loading')}</td></tr>
-                        )}
-                        {!loading && units.map((unit) => (
-                            <tr
-                                key={unit.id}
-                                onClick={() => navigate(`/units/${unit.id}`)}
-                                className="hover:bg-slate-50/50 transition-colors cursor-pointer"
-                            >
-                                <td className="p-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
-                                            <Building className="w-5 h-5" />
-                                        </div>
-                                        <div>
-                                            <span className="font-medium text-slate-700 block">{t('units.table.quadra')} {unit.quadra}</span>
-                                            <span className="text-xs text-slate-500">{t('units.table.lote')} {unit.lote} • {t('units.table.casa')} {unit.casa}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="p-4 text-center">
-                                    <span className="inline-flex items-center justify-center min-w-[2rem] h-6 px-2 rounded-full bg-slate-100 text-xs font-medium text-slate-600">
-                                        {unit.residents_count}
-                                    </span>
-                                </td>
-                                <td className="p-4 text-right space-x-2">
-                                    {user.role === 'admin' && (
-                                        <>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); navigate(`/units/${unit.id}/edit`); }}
-                                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                            >
-                                                <Edit className="w-4 h-4" />
-                                            </button>
-                                            <button
-                                                onClick={(e) => handleDelete(e, unit.id)}
-                                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
-                                        </>
-                                    )}
-                                </td>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse min-w-[500px] md:min-w-full">
+                        <thead>
+                            <tr className="bg-slate-50 border-b border-slate-100 text-xs text-slate-500 uppercase">
+                                <th className="p-4 font-semibold">{t('units.table.identification')}</th>
+                                <th className="p-4 font-semibold text-center">{t('units.table.residents')}</th>
+                                <th className="p-4 font-semibold text-right">{t('common.actions')}</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {loading && (
+                                <tr><td colSpan="3" className="p-8 text-center text-slate-500">{t('common.loading')}</td></tr>
+                            )}
+                            {!loading && units.map((unit) => (
+                                <tr
+                                    key={unit.id}
+                                    onClick={() => navigate(`/units/${unit.id}`)}
+                                    className="hover:bg-slate-50/50 transition-colors cursor-pointer"
+                                >
+                                    <td className="p-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                                                <Building className="w-5 h-5" />
+                                            </div>
+                                            <div>
+                                                <span className="font-medium text-slate-700 block">{t('units.table.quadra')} {unit.quadra}</span>
+                                                <span className="text-xs text-slate-500">{t('units.table.lote')} {unit.lote} • {t('units.table.casa')} {unit.casa}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="p-4 text-center">
+                                        <span className="inline-flex items-center justify-center min-w-[2rem] h-6 px-2 rounded-full bg-slate-100 text-xs font-medium text-slate-600">
+                                            {unit.residents_count}
+                                        </span>
+                                    </td>
+                                    <td className="p-4 text-right space-x-2">
+                                        {user.role === 'admin' && (
+                                            <>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); navigate(`/units/${unit.id}/edit`); }}
+                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                >
+                                                    <Edit className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                    onClick={(e) => handleDelete(e, unit.id)}
+                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
                 {!loading && units.length === 0 && (
                     <div className="p-8 text-center text-slate-500">

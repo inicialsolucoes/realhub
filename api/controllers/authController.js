@@ -1,6 +1,7 @@
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { logAction } = require('../utils/logger');
 
 exports.register = async (req, res) => {
     const { name, email, password, phone } = req.body;
@@ -15,6 +16,9 @@ exports.register = async (req, res) => {
             'INSERT INTO users (name, email, password, phone, role) VALUES (?, ?, ?, ?, ?)',
             [name, email, hashedPassword, phone, 'user']
         );
+
+        // LOG REGISTER
+        await logAction(result.insertId, 'REGISTER', 'user', result.insertId, { name, email }, req.ip);
 
         res.status(201).send({ message: 'User registered successfully!' });
     } catch (error) {
@@ -52,6 +56,9 @@ exports.login = async (req, res) => {
             { expiresIn: 86400 } // 24 hours
         );
 
+        // LOG LOGIN
+        await logAction(user.id, 'LOGIN', 'user', user.id, { email: user.email }, req.ip);
+
         res.status(200).send({
             id: user.id,
             name: user.name,
@@ -60,6 +67,34 @@ exports.login = async (req, res) => {
             unit_id: user.unit_id,
             accessToken: token
         });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+};
+exports.forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const [rows] = await db.execute('SELECT id FROM users WHERE email = ?', [email]);
+        const userId = rows.length > 0 ? rows[0].id : null;
+
+        await logAction(userId, 'FORGOT_PASSWORD_REQUEST', 'user', userId, { email }, req.ip);
+
+        // Return 200 even if user not found for security
+        res.status(200).send({ message: 'Request received' });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+};
+
+exports.logout = async (req, res) => {
+    // Note: Since we use JWT, logout is mostly handled client-side by deleting the token.
+    // However, we log the intent if the client hits this endpoint.
+    try {
+        // Authenticated routes pass req.userId
+        if (req.userId) {
+            await logAction(req.userId, 'LOGOUT', 'user', req.userId, null, req.ip);
+        }
+        res.status(200).send({ message: 'Logged out successfully' });
     } catch (error) {
         res.status(500).send({ message: error.message });
     }

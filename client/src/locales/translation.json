@@ -6,6 +6,7 @@
         "users": "Moradores",
         "payments": "Pagamentos",
         "cost_centers": "Centros de Custos",
+        "logs": "Logs de Atividade",
         "logout": "Sair"
     },
     "auth": {
@@ -48,7 +49,8 @@
             "of": "de"
         },
         "error_saving": "Erro ao salvar",
-        "error_deleting": "Erro ao excluir"
+        "error_deleting": "Erro ao excluir",
+        "system": "Sistema"
     },
     "units": {
         "title": "Unidades",
@@ -129,7 +131,7 @@
             "no_cost_centers": "Nenhum centro de custo cadastrado."
         },
         "filters": {
-            "search_placeholder": "Buscar por nome ou email..."
+            "search_placeholder": "Buscar por nome..."
         }
     },
     "payments": {
@@ -177,7 +179,13 @@
             "title": "Detalhes do Lançamento",
             "no_proof": "Nenhum comprovante anexado",
             "delete_confirm": "Excluir este lançamento?",
-            "delete_error": "Erro ao excluir (Você tem permissão?)"
+            "delete_error": "Erro ao excluir (Você tem permissão?)",
+            "description": "Descrição",
+            "amount": "Valor",
+            "date": "Data",
+            "unit": "Unidade",
+            "cost_center": "Centro de Custo",
+            "type": "Tipo"
         }
     },
     "dashboard": {
@@ -186,6 +194,37 @@
         "expense_month": "Saídas (Mês)",
         "evolution": "Evolução Financeira (12 Meses)",
         "cash_flow_report_soon": "Relatório de Pagamentos (Em breve)",
-        "recent_activities_soon": "Atividades Recentes (Em breve)"
+        "recent_activities": "Atividades Recentes",
+        "no_recent_activities": "Nenhuma atividade recente"
+    },
+    "entities": {
+        "user": "morador",
+        "payment": "pagamento",
+        "unit": "unidade",
+        "cost_center": "centro de custo"
+    },
+    "logs": {
+        "filters": {
+            "all_actions": "Todas as Ações",
+            "all_entities": "Todas as Entidades"
+        },
+        "table": {
+            "user": "Usuário",
+            "action": "Ação",
+            "entity": "Entidade",
+            "date": "Data/Hora",
+            "no_results": "Nenhum log encontrado."
+        },
+        "details": {
+            "title": "Detalhes do Log",
+            "metadata": "Metadados",
+            "impact": "Impacto",
+            "data": "Dados",
+            "attribute": "Atributo",
+            "value": "Valor",
+            "old_state": "Valor Antigo",
+            "new_state": "Valor Novo",
+            "current_data": "Dados Registrados"
+        }
     }
 }

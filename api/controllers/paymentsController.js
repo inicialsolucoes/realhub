@@ -1,4 +1,5 @@
 const db = require('../db');
+const { logAction } = require('../utils/logger');
 
 exports.findAll = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -148,6 +149,11 @@ exports.create = async (req, res) => {
             'INSERT INTO payments (date, type, amount, proof, description, unit_id, user_id, cost_center_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             [date, type, amount, proof, description || null, unit_id, req.userId, cost_center_id]
         );
+
+        // LOG CREATE
+        const logData = { date, type, amount, proof: proof ? '(file)' : null, description, unit_id, cost_center_id };
+        await logAction(req.userId, 'CREATE', 'payment', result.insertId, logData, req.ip);
+
         res.status(201).send({ message: "Payment created", id: result.insertId });
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -198,10 +204,20 @@ exports.update = async (req, res) => {
             }
         }
 
+        // Fetch current state for log
+        const [oldRows] = await db.query('SELECT date, type, amount, proof, description, unit_id, cost_center_id FROM payments WHERE id = ?', [req.params.id]);
+        const oldData = oldRows[0];
+        if (oldData && oldData.proof) oldData.proof = '(file)';
+
         await db.query(
             'UPDATE payments SET date = ?, type = ?, amount = ?, proof = ?, description = ?, unit_id = ?, cost_center_id = ? WHERE id = ?',
             [date, finalType, amount, proof, description || null, finalUnitId, cost_center_id, req.params.id]
         );
+
+        // LOG UPDATE
+        const newData = { date, type: finalType, amount, proof: proof ? '(file)' : null, description, unit_id: finalUnitId, cost_center_id };
+        await logAction(req.userId, 'UPDATE', 'payment', req.params.id, { old: oldData, new: newData }, req.ip);
+
         res.status(200).send({ message: "Payment updated" });
 
     } catch (error) {
@@ -216,7 +232,15 @@ exports.delete = async (req, res) => {
     }
 
     try {
+        // Fetch data before deletion for logging
+        const [rows] = await db.query('SELECT date, type, amount, description, unit_id, cost_center_id FROM payments WHERE id = ?', [req.params.id]);
+        const deletedData = rows.length > 0 ? rows[0] : null;
+
         await db.query('DELETE FROM payments WHERE id = ?', [req.params.id]);
+
+        // LOG DELETE
+        await logAction(req.userId, 'DELETE', 'payment', req.params.id, deletedData, req.ip);
+
         res.status(200).send({ message: "Payment deleted" });
     } catch (error) {
         res.status(500).send({ message: error.message });
