@@ -1,0 +1,191 @@
+{
+    "app": {
+        "name": "RealHub",
+        "dashboard": "Painel",
+        "units": "Unidades",
+        "users": "Moradores",
+        "payments": "Pagamentos",
+        "cost_centers": "Centros de Custos",
+        "logout": "Sair"
+    },
+    "auth": {
+        "login_title": "Bem-vindo",
+        "login_subtitle": "Acesse sua conta para continuar",
+        "register_title": "Criar Conta",
+        "register_subtitle": "Preencha seus dados para começar",
+        "email": "Email",
+        "password": "Senha",
+        "name": "Nome",
+        "phone": "Telefone",
+        "submit_login": "Entrar",
+        "submit_register": "Cadastrar",
+        "forgot_password": "Esqueci a senha",
+        "forgot_password_title": "Recuperar Senha",
+        "forgot_password_subtitle": "Digite seu email para receber um link de redefinição.",
+        "back_to_login": "Voltar para Login",
+        "send_link": "Enviar Link",
+        "sending": "Enviando...",
+        "verify_email_title": "Verifique seu email",
+        "verify_email_text": "Se existir uma conta com o email {email}, enviamos as instruções para redefinir sua senha.",
+        "no_account": "Não tem uma conta?",
+        "has_account": "Já tem uma conta?",
+        "login_link": "Faça login",
+        "registering": "Cadastrando...",
+        "register_error": "Falha no cadastro",
+        "email_placeholder": "seu@email.com"
+    },
+    "common": {
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "delete": "Excluir",
+        "edit": "Editar",
+        "back": "Voltar",
+        "actions": "Ações",
+        "loading": "Carregando...",
+        "confirm_delete": "Tem certeza?",
+        "pagination": {
+            "page": "Página",
+            "of": "de"
+        },
+        "error_saving": "Erro ao salvar",
+        "error_deleting": "Erro ao excluir"
+    },
+    "units": {
+        "title": "Unidades",
+        "new": "Nova Unidade",
+        "block": "Quadra",
+        "lot": "Lote",
+        "house": "Casa",
+        "residents": "Moradores",
+        "filters": {
+            "quadra": "Quadra",
+            "lote": "Lote",
+            "casa": "Casa",
+            "search_quadra": "Buscar quadra...",
+            "search_lote": "Buscar lote...",
+            "search_casa": "Buscar casa..."
+        },
+        "table": {
+            "quadra": "Quadra",
+            "lote": "Lote",
+            "casa": "Casa",
+            "identification": "Identificação",
+            "residents": "Moradores",
+            "no_units_found": "Nenhuma unidade encontrada"
+        },
+        "form": {
+            "edit_title": "Editar Unidade",
+            "new_title": "Nova Unidade",
+            "observation": "Observação"
+        },
+        "details": {
+            "title_prefix": "Unidade",
+            "back_to_list": "Voltar para lista",
+            "no_observation": "Nenhuma observação",
+            "no_residents": "Nenhum morador vinculado",
+            "delete_confirm": "Excluir unidade e desvincular moradores?",
+            "details": "Detalhes"
+        }
+    },
+    "cost_centers": {
+        "title": "Centros de Custos",
+        "new": "Novo Centro de Custo",
+        "table": {
+            "name": "Nome",
+            "type": "Tipo",
+            "no_results": "Nenhum centro de custo encontrado.",
+            "delete_error": "Não é possível excluir centro de custo em uso."
+        },
+        "form": {
+            "name": "Nome",
+            "type": "Tipo",
+            "edit_title": "Editar Centro de Custo",
+            "new_title": "Novo Centro de Custo"
+        },
+        "filters": {
+            "search_placeholder": "Buscar por nome..."
+        }
+    },
+    "users": {
+        "title": "Moradores",
+        "new": "Novo Morador",
+        "table": {
+            "email": "Email",
+            "phone": "Telefone",
+            "unit": "Unidade",
+            "contact": "Contato",
+            "profile": "Perfil",
+            "no_results": "Nenhum morador encontrado."
+        },
+        "form": {
+            "edit_title": "Editar Morador",
+            "new_title": "Novo Morador",
+            "role": "Nível de Acesso",
+            "role_admin": "Administrador",
+            "role_user": "Morador",
+            "cost_centers": "Centros de Custos Vinculados",
+            "password_hint": "Deixe em branco para não alterar",
+            "select_unit": "Selecione uma unidade...",
+            "no_cost_centers": "Nenhum centro de custo cadastrado."
+        },
+        "filters": {
+            "search_placeholder": "Buscar por nome ou email..."
+        }
+    },
+    "payments": {
+        "title": "Pagamentos",
+        "new": "Novo Lançamento",
+        "income": "Entrada",
+        "expense": "Saída",
+        "amount": "Valor",
+        "date": "Data",
+        "proof": "Comprovante",
+        "filters": {
+            "cost_center": "Centro de Custo",
+            "type": "Tipo",
+            "date": "Data",
+            "unit": "Unidade",
+            "all": "Todos",
+            "filter_button": "Filtrar"
+        },
+        "table": {
+            "cost_center": "C. Custo",
+            "type": "Tipo",
+            "amount": "Valor",
+            "date": "Data",
+            "unit": "Unidade",
+            "actions": "Ações",
+            "no_results": "Nenhum lançamento encontrado.",
+            "no_unit": "Sem unidade"
+        },
+        "form": {
+            "edit_title": "Editar Lançamento",
+            "new_title": "Novo Lançamento",
+            "cost_center": "Centro de Custo",
+            "amount": "Valor (R$)",
+            "date": "Data",
+            "type": "Tipo",
+            "unit": "Unidade (Opcional)",
+            "no_unit": "Sem vínculo",
+            "proof": "Comprovante (PDF ou Imagem)",
+            "description": "Descrição (Opcional)",
+            "upload_hint": "Clique para fazer upload",
+            "file_selected": "Arquivo selecionado!",
+            "select_placeholder": "Selecione..."
+        },
+        "details": {
+            "title": "Detalhes do Lançamento",
+            "no_proof": "Nenhum comprovante anexado",
+            "delete_confirm": "Excluir este lançamento?",
+            "delete_error": "Erro ao excluir (Você tem permissão?)"
+        }
+    },
+    "dashboard": {
+        "overview": "Visão Geral",
+        "income_month": "Entradas (Mês)",
+        "expense_month": "Saídas (Mês)",
+        "evolution": "Evolução Financeira (12 Meses)",
+        "cash_flow_report_soon": "Relatório de Pagamentos (Em breve)",
+        "recent_activities_soon": "Atividades Recentes (Em breve)"
+    }
+}
