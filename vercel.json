@@ -22,6 +22,11 @@
       "src": "/(.*)",
       "dest": "/client/$1",
       "check": true
+    },
+    {
+      "src": "/reset-password/(.*)",
+      "dest": "/client/reset-password/$1",
+      "check": true
     }
   ]
 }
