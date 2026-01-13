@@ -20,14 +20,11 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/client/$1",
-      "check": true
-    }
-  ],
-  "rewrites": [
+      "dest": "/client/$1"
+    },
     {
-      "source": "/(.*)",
-      "destination": "/client/$1"
+      "src": "/reset-password/(.*)",
+      "dest": "/client/$1"
     }
   ]
 }
