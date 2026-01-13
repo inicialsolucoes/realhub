@@ -31,44 +31,57 @@ export default function LogsList() {
         setFilters({ ...filters, page: newPage });
     };
 
+    const handleSearch = (e) => {
+        e.preventDefault();
+        setFilters({ ...filters, page: 1 });
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-slate-800">{t('app.logs')}</h1>
             </div>
 
-            <div className="card grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-                <div className="relative">
-                    <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <select
-                        className="input pl-10"
-                        value={filters.action}
-                        onChange={e => setFilters({ ...filters, action: e.target.value, page: 1 })}
-                    >
-                        <option value="">{t('logs.filters.all_actions') || 'Todas as Ações'}</option>
-                        <option value="CREATE">CREATE</option>
-                        <option value="UPDATE">UPDATE</option>
-                        <option value="DELETE">DELETE</option>
-                        <option value="LOGIN">LOGIN</option>
-                        <option value="LOGOUT">LOGOUT</option>
-                        <option value="REGISTER">REGISTER</option>
-                        <option value="FORGOT_PASSWORD_REQUEST">FORGOT PASSWORD</option>
-                    </select>
-                </div>
-                <div className="relative">
-                    <Activity className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <select
-                        className="input pl-10"
-                        value={filters.entity_type}
-                        onChange={e => setFilters({ ...filters, entity_type: e.target.value, page: 1 })}
-                    >
-                        <option value="">{t('logs.filters.all_entities') || 'Todas as Entidades'}</option>
-                        <option value="user">{t('entities.user')}</option>
-                        <option value="unit">{t('entities.unit')}</option>
-                        <option value="payment">{t('entities.payment')}</option>
-                        <option value="cost_center">{t('entities.cost_center')}</option>
-                    </select>
-                </div>
+            {/* Filters */}
+            <div className="card p-4">
+                <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                    <div>
+                        <label className="text-xs font-semibold text-slate-500 uppercase mb-1 block">{t('logs.table.action')}</label>
+                        <select
+                            className="input w-full text-sm py-1"
+                            value={filters.action}
+                            onChange={e => setFilters({ ...filters, action: e.target.value, page: 1 })}
+                        >
+                            <option value="">{t('logs.filters.all_actions') || 'Todas as Ações'}</option>
+                            <option value="CREATE">CREATE</option>
+                            <option value="UPDATE">UPDATE</option>
+                            <option value="DELETE">DELETE</option>
+                            <option value="LOGIN">LOGIN</option>
+                            <option value="LOGOUT">LOGOUT</option>
+                            <option value="REGISTER">REGISTER</option>
+                            <option value="FORGOT_PASSWORD_REQUEST">FORGOT PASSWORD</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="text-xs font-semibold text-slate-500 uppercase mb-1 block">{t('logs.table.entity')}</label>
+                        <select
+                            className="input w-full text-sm py-1"
+                            value={filters.entity_type}
+                            onChange={e => setFilters({ ...filters, entity_type: e.target.value, page: 1 })}
+                        >
+                            <option value="">{t('logs.filters.all_entities') || 'Todas as Entidades'}</option>
+                            <option value="user">{t('entities.user')}</option>
+                            <option value="unit">{t('entities.unit')}</option>
+                            <option value="payment">{t('entities.payment')}</option>
+                            <option value="cost_center">{t('entities.cost_center')}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" className="btn btn-outline flex items-center justify-center gap-2 h-[38px] w-full md:w-auto">
+                            <Search className="w-4 h-4" /> {t('payments.filters.filter_button')}
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <div className="card overflow-hidden">
@@ -77,10 +90,10 @@ export default function LogsList() {
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-100 text-xs text-slate-500 uppercase">
                                 <th className="p-4 font-semibold">{t('logs.table.user') || 'Usuário'}</th>
-                                <th className="p-4 font-semibold">{t('logs.table.action') || 'Ação'}</th>
-                                <th className="p-4 font-semibold">{t('logs.table.entity') || 'Entidade'}</th>
-                                <th className="p-4 font-semibold">{t('logs.table.date') || 'Data/Hora'}</th>
-                                <th className="p-4 font-semibold text-center">{t('common.actions')}</th>
+                                <th className="p-4 font-semibold min-w-40 w-40">{t('logs.table.action') || 'Ação'}</th>
+                                <th className="p-4 font-semibold min-w-48 w-48">{t('logs.table.entity') || 'Entidade'}</th>
+                                <th className="p-4 font-semibold min-w-48 w-48">{t('logs.table.date') || 'Data/Hora'}</th>
+                                <th className="p-4 font-semibold text-right min-w-12 w-12">{t('common.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
@@ -93,8 +106,10 @@ export default function LogsList() {
                                     <tr key={log.id} className="hover:bg-slate-50 transition-colors">
                                         <td className="p-4">
                                             <div className="flex items-center gap-2">
-                                                <UserIcon className="w-4 h-4 text-slate-400" />
-                                                <span className="font-medium text-slate-700">{log.user_name || t('common.system')}</span>
+                                                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                                                    <UserIcon className="w-5 h-5" />
+                                                </div>
+                                                <span className="font-medium text-slate-700 text-nowrap">{log.user_name || t('common.system')}</span>
                                             </div>
                                         </td>
                                         <td className="p-4">
@@ -117,8 +132,8 @@ export default function LogsList() {
                                                 {new Date(log.created_at).toLocaleString('pt-BR')}
                                             </div>
                                         </td>
-                                        <td className="p-4 text-center">
-                                            <Link to={`/logs/${log.id}`} className="text-primary hover:text-primary-dark p-2 inline-block">
+                                        <td className="p-4 text-right">
+                                            <Link to={`/logs/${log.id}`} className="p-2 text-primary hover:bg-slate-100 rounded-lg inline-block transition-colors">
                                                 <Eye className="w-5 h-5" />
                                             </Link>
                                         </td>
@@ -129,29 +144,24 @@ export default function LogsList() {
                     </table>
                 </div>
 
-                {meta.last_page > 1 && (
-                    <div className="p-4 flex justify-between items-center border-t border-slate-50 bg-slate-50/50">
-                        <span className="text-sm text-slate-500">
-                            {t('common.pagination.page')} {meta.page} {t('common.pagination.of')} {meta.last_page}
-                        </span>
-                        <div className="flex gap-2">
-                            <button
-                                onClick={() => handlePageChange(meta.page - 1)}
-                                disabled={meta.page === 1}
-                                className="p-2 rounded-lg border border-slate-200 bg-white disabled:opacity-50 hover:bg-slate-50 transition-colors"
-                            >
-                                <ChevronLeft className="w-5 h-5" />
-                            </button>
-                            <button
-                                onClick={() => handlePageChange(meta.page + 1)}
-                                disabled={meta.page === meta.last_page}
-                                className="p-2 rounded-lg border border-slate-200 bg-white disabled:opacity-50 hover:bg-slate-50 transition-colors"
-                            >
-                                <ChevronRight className="w-5 h-5" />
-                            </button>
-                        </div>
-                    </div>
-                )}
+                {/* Pagination */}
+                <div className="p-4 border-t border-slate-100 flex justify-between items-center">
+                    <button
+                        disabled={meta.page === 1}
+                        onClick={() => handlePageChange(Math.max(1, meta.page - 1))}
+                        className="btn btn-outline py-1 px-3 disabled:opacity-50"
+                    >
+                        <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <span className="text-sm text-slate-600">{t('common.pagination.page')} {meta.page} {t('common.pagination.of')} {meta.last_page}</span>
+                    <button
+                        disabled={meta.page === meta.last_page}
+                        onClick={() => handlePageChange(Math.min(meta.last_page, meta.page + 1))}
+                        className="btn btn-outline py-1 px-3 disabled:opacity-50"
+                    >
+                        <ChevronRight className="w-4 h-4" />
+                    </button>
+                </div>
             </div>
         </div>
     );

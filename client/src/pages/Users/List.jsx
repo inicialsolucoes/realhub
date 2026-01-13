@@ -109,9 +109,11 @@ export default function UsersList() {
                             placeholder="Q/L/C..."
                         />
                     </div>
-                    <button type="submit" className="btn btn-outline flex items-center justify-center gap-2 h-[38px]">
-                        <Search className="w-4 h-4" /> {t('payments.filters.filter_button')}
-                    </button>
+                    <div>
+                        <button type="submit" className="btn btn-outline flex items-center justify-center gap-2 h-[38px] w-full md:w-auto">
+                            <Search className="w-4 h-4" /> {t('payments.filters.filter_button')}
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -121,10 +123,10 @@ export default function UsersList() {
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-100 text-xs text-slate-500 uppercase">
                                 <th className="p-4 font-semibold">{t('auth.name')}</th>
-                                <th className="p-4 font-semibold hidden sm:table-cell">{t('users.table.contact')}</th>
-                                <th className="p-4 font-semibold">{t('users.table.unit')}</th>
-                                <th className="p-4 font-semibold hidden md:table-cell">{t('users.table.profile')}</th>
-                                <th className="p-4 font-semibold text-right">{t('common.actions')}</th>
+                                <th className="p-4 font-semibold">{t('users.table.contact')}</th>
+                                <th className="p-4 font-semibold min-w-40 w-40">{t('users.table.unit')}</th>
+                                <th className="p-4 font-semibold min-w-32 w-32">{t('users.table.profile')}</th>
+                                <th className="p-4 font-semibold text-right min-w-32 w-32">{t('common.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -138,10 +140,10 @@ export default function UsersList() {
                                             <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
                                                 <UserIcon className="w-5 h-5" />
                                             </div>
-                                            <span className="font-medium text-slate-700">{user.name}</span>
+                                            <span className="font-medium text-slate-700 text-nowrap">{user.name}</span>
                                         </div>
                                     </td>
-                                    <td className="p-4 hidden sm:table-cell">
+                                    <td className="p-4">
                                         <div className="flex flex-col gap-1">
                                             {user.email && (
                                                 <a
@@ -175,7 +177,7 @@ export default function UsersList() {
                                             <span className="text-xs text-slate-400 italic">{t('payments.table.no_unit')}</span>
                                         )}
                                     </td>
-                                    <td className="p-4 hidden md:table-cell">
+                                    <td className="p-4">
                                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${user.role === 'admin' ? 'bg-purple-50 text-purple-700' : 'bg-blue-50 text-blue-700'}`}>
                                             {user.role === 'admin' ? t('users.form.role_admin') : t('users.form.role_user')}
                                         </span>

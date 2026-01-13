@@ -1,104 +1,130 @@
-# RealHub - Sistema de Gestão de Condomínios (SaaS)
+# RealHub - Condominium Management System (SaaS)
 
-Um sistema completo para gestão de condomínios com Backend em Node.js/Express e Frontend em React.js/Tailwind CSS.
+A complete condominium management system with a Node.js/Express Backend and a React.js/Tailwind CSS Frontend.
 
-## 🚀 Tecnologias
+## 🚀 Technologies
 
 - **Backend**: Node.js, Express.js, MySQL, JWT, Bcrypt
-- **Frontend**: React.js, Vite, Tailwind CSS, Lucide Icons, React Router
-- **Arquitetura**: Monorepo pronto para Vercel
-- **Design**: Premium, Mobile-First, Tons de Azul (#0ea5e9, #1e3a8a)
+- **Frontend**: React.js, Vite, Tailwind CSS, Lucide Icons, React Router, Framer Motion
+- **Architecture**: Monorepo ready for Vercel deployment
+- **Design**: Premium, Mobile-First, Professional Blue Palette (#0ea5e9, #1e3a8a)
 
-## 📁 Estrutura de Pastas
+## ✨ Key Features
+
+- **Resident Management**: Complete CRUD with unit linkage and cost center associations.
+- **Unit Management**: Support for alphanumeric Quadra/Lote/Casa (e.g., Block A, Lot 10B).
+- **Financial Control**: Payment registration (Inflow/Outflow) with support for proof of payment.
+- **Cost Centers**: Group payments and residents by specific departments or categories.
+- **Activity Logs**: Advanced auditing system for Admins.
+    - Track all Creations, Updates, and Deletions.
+    - **Side-by-side data comparison** for updates (Old vs. New values).
+    - IP Address and Timestamp tracking.
+- **Dashboard**: Real-time stats and a live Activity Feed.
+- **Internationalization**: Fully localized UI (Portuguese/English support).
+
+## 📁 Project Structure
 
 ```
 /
 ├── api/                 # Backend (Express API)
-│   ├── controllers/     # Lógica de controle
-│   ├── routes/          # Definição de rotas
-│   ├── middleware/      # Auth & Permissões
-│   └── migrations/      # Scripts SQL
+│   ├── controllers/     # Business logic
+│   ├── routes/          # API Route definitions
+│   ├── middleware/      # Auth & Permissions
+│   └── migrations/      # SQL Schema scripts
 ├── client/              # Frontend (React App)
 │   ├── src/
-│   │   ├── components/  # Componentes reutilizáveis
-│   │   ├── pages/       # Páginas da aplicação
-│   │   ├── context/     # Gerenciamento de estado (Auth)
-│   │   └── layouts/     # Layouts (Dashboard, etc)
-└── vercel.json          # Configuração de Deploy
+│   │   ├── components/  # Reusable UI components
+│   │   ├── pages/       # Application views
+│   │   ├── context/     # State management (Auth, Translation)
+│   │   └── layouts/     # Page layouts (Dashboard, etc.)
+└── vercel.json          # Deployment configuration
 ```
 
-## 🛠️ Instalação e execução local
+## 🛠️ Local Setup & Execution
 
-### Pré-requisitos
+### Prerequisites
 - Node.js v18+
 - MySQL Database
 
-### 1. Configuração do Banco de Dados
-Crie um banco de dados MySQL e execute os scripts da pasta `api/migrations/` na ordem:
+### 1. Database Configuration
+
+You must execute the SQL scripts located in `api/migrations/` in sequential order. 
+
+**Manual Execution:**
+Run the scripts in this specific order:
 1. `001_create_units.sql`
 2. `002_create_users.sql`
 3. `003_create_payments.sql`
+... and so on for all files up to `011_alter_units_lote_casa.sql`.
 
-Alternativamente, use um cliente SQL para rodar os comandos.
+**Automated Execution (Linux/macOS):**
+If you have the `mysql` client installed, you can run all migrations at once from the root folder:
+```bash
+for f in api/migrations/*.sql; do 
+  mysql -u YOUR_USER -pYOUR_PASS YOUR_DB_NAME < $f; 
+done
+```
 
-### 2. Variáveis de Ambiente
-Crie um arquivo `.env` na raiz do projeto:
+### 2. Environment Variables
+Create a `.env` file in the `api/` directory:
 
 ```env
-DATABASE_URL=mysql://usuario:senha@host:3306/nome_do_banco
-JWT_SECRET=sua_chave_secreta_super_segura
+DATABASE_URL=mysql://user:password@host:3306/database_name
+JWT_SECRET=your_super_secure_secret_key
 PORT=3001
 ```
 
-### 3. Instalação de Dependências
+### 3. Install Dependencies
 
 ```bash
-# Instalar dependências da raiz (Backend)
+# Install root dependencies (Backend)
+cd api
 npm install
 
-# Instalar dependências do Frontend
+# Install Frontend dependencies
 cd client
 npm install
 ```
 
-### 4. Execução
+### 4. Running the Application
 
-Para rodar o projeto localmente, você precisará de dois terminais:
+You will need two separate terminal windows:
 
 **Terminal 1 (Backend):**
 ```bash
+# From the /api directory
 npm start
-# Ou: node api/index.js
 ```
 
 **Terminal 2 (Frontend):**
 ```bash
-cd client
+# From the /client directory
 npm run dev
 ```
 
-Acesse o frontend em `http://localhost:5173`.
+The application will be available at `http://localhost:5173`.
 
-## 📦 Deploy na Vercel
+## 📦 Vercel Deployment
 
-O projeto já está configurado com `vercel.json` para deploy simples.
+The project is pre-configured with `vercel.json` for seamless deployment.
 
-1. Instale a Vercel CLI: `npm i -g vercel`
-2. Rode `vercel` na raiz do projeto.
-3. Configure as variáveis de ambiente (`DATABASE_URL`, `JWT_SECRET`) no painel da Vercel.
+1. Install Vercel CLI: `npm i -g vercel`
+2. Run `vercel` in the project root.
+3. Configure Environment Variables (`DATABASE_URL`, `JWT_SECRET`) in the Vercel Dashboard.
 
-## 🔐 Níveis de Acesso
+## 🔐 Access Levels
 
-- **Admin**: Acesso total (CRUD de Unidades, Usuários, Pagamentos).
-- **Morador**: 
-  - Visualiza sua unidade e moradores vinculados.
-  - Registra pagamentos (Entrada).
-  - Visualiza seus pagamentos.
-  - Não pode excluir registros.
+- **Admin**: Full access to all modules (Units, Users, Payments, Cost Centers, and Activity Logs).
+- **Resident (User)**:
+    - View their own household details.
+    - Register payments (Inflow).
+    - View payment history.
+    - Restricted from deleting any records.
 
 ## 🎨 Design System
 
-O projeto utiliza Tailwind CSS com uma paleta de cores personalizada "Premium Blue":
-- Primary: `#1d4ed8`
-- Dark: `#1e3a8a`
-- Light: `#0ea5e9`
+The project uses Tailwind CSS with a "Premium Blue" palette:
+- **Primary**: `#1d4ed8` (Deep Blue)
+- **Dark**: `#1e3a8a` (Professional Navy)
+- **Light**: `#0ea5e9` (Sky Blue)
+- **Background**: Subtle Slate gradients for a modern SaaS look.

@@ -107,8 +107,8 @@ export default function UnitsList() {
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-100 text-xs text-slate-500 uppercase">
                                 <th className="p-4 font-semibold">{t('units.table.identification')}</th>
-                                <th className="p-4 font-semibold text-center">{t('units.table.residents')}</th>
-                                <th className="p-4 font-semibold text-right">{t('common.actions')}</th>
+                                <th className="p-4 font-semibold text-center min-w-32 w-32">{t('units.table.residents')}</th>
+                                <th className="p-4 font-semibold text-right min-w-32 w-32">{t('common.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">

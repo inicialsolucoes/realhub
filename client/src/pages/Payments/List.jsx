@@ -111,9 +111,12 @@ export default function PaymentsList() {
                             placeholder="Q/L/C..."
                         />
                     </div>
-                    <button type="submit" className="btn btn-outline flex items-center justify-center gap-2 h-[38px]">
-                        <Search className="w-4 h-4" /> {t('payments.filters.filter_button')}
-                    </button>
+                    {/* Empty col for spacing if needed or just button */}
+                    <div>
+                        <button type="submit" className="btn btn-outline flex items-center justify-center gap-2 h-[38px] w-full md:w-auto">
+                            <Search className="w-4 h-4" /> {t('payments.filters.filter_button')}
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -123,11 +126,11 @@ export default function PaymentsList() {
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-100 text-xs text-slate-500 uppercase">
                                 <th className="p-4 font-semibold">{t('payments.table.cost_center')}</th>
-                                <th className="p-4 font-semibold hidden sm:table-cell">{t('payments.table.type')}</th>
-                                <th className="p-4 font-semibold">{t('payments.table.amount')}</th>
-                                <th className="p-4 font-semibold hidden md:table-cell">{t('payments.table.date')}</th>
-                                <th className="p-4 font-semibold hidden lg:table-cell">{t('payments.table.unit')}</th>
-                                <th className="p-4 font-semibold text-right">{t('payments.table.actions')}</th>
+                                <th className="p-4 font-semibold min-w-32 w-32">{t('payments.table.type')}</th>
+                                <th className="p-4 font-semibold min-w-32 w-32">{t('payments.table.amount')}</th>
+                                <th className="p-4 font-semibold min-w-40 w-40">{t('payments.table.unit')}</th>
+                                <th className="p-4 font-semibold min-w-32 w-32">{t('payments.table.date')}</th>
+                                <th className="p-4 font-semibold text-right min-w-32 w-32">{t('payments.table.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -140,10 +143,10 @@ export default function PaymentsList() {
                                     onClick={() => navigate(`/payments/${payment.id}`)}
                                     className="hover:bg-slate-50/50 transition-colors cursor-pointer"
                                 >
-                                    <td className="p-4 text-slate-600 text-sm">
+                                    <td className="p-4 text-slate-600 text-sm text-nowrap">
                                         {payment.cost_center_name || '-'}
                                     </td>
-                                    <td className="p-4 hidden sm:table-cell">
+                                    <td className="p-4">
                                         {payment.type === 'income' ? (
                                             <span className="inline-flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full text-xs font-medium">
                                                 <TrendingUp className="w-3 h-3" /> {t('payments.income')}
@@ -157,10 +160,7 @@ export default function PaymentsList() {
                                     <td className={`p-4 font-bold ${payment.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
                                         R$ {parseFloat(payment.amount).toFixed(2)}
                                     </td>
-                                    <td className="p-4 text-slate-500 text-sm hidden md:table-cell">
-                                        {new Date(payment.date).toLocaleDateString()}
-                                    </td>
-                                    <td className="p-4 hidden lg:table-cell">
+                                    <td className="p-4">
                                         {payment.quadra ? (
                                             <div className="flex items-center gap-2 text-slate-700 bg-slate-100 px-2 py-1 rounded text-sm w-fit">
                                                 <Building2 className="w-3 h-3" />
@@ -169,6 +169,9 @@ export default function PaymentsList() {
                                         ) : (
                                             <span className="text-xs text-slate-400 italic">{t('payments.table.no_unit')}</span>
                                         )}
+                                    </td>
+                                    <td className="p-4 text-slate-500 text-sm">
+                                        {new Date(payment.date).toLocaleDateString()}
                                     </td>
                                     <td className="p-4 text-right space-x-2">
                                         {(user.role === 'admin' || user.id === payment.user_id) && (
