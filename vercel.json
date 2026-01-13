@@ -24,7 +24,7 @@
     },
     {
       "src": "/reset-password/(.*)",
-      "dest": "/client/$1"
+      "dest": "/client/reset-password/$1"
     }
   ]
 }
