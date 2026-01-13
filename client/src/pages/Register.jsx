@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Building2 } from 'lucide-react';
 import { useTranslation } from '../context/TranslationContext';
 
 export default function Register() {
@@ -32,8 +32,15 @@ export default function Register() {
         <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
                 <div className="text-center mb-8">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                            <Building2 className="w-5 h-5 text-white" />
+                        </div>
+                        <h1 className="text-xl font-bold tracking-tight">RealHub</h1>
+                        <p className="mt-2 text-xs text-slate-400 uppercase tracking-wider font-medium">Residencial Costa Real 1</p>
+                    </div>
                     <h2 className="text-2xl font-bold text-slate-800">{t('auth.submit_register')}</h2>
-                    <p className="text-slate-500 mt-2">{t('auth.forgot_password_subtitle')}</p>
+                    <p className="text-slate-500 mt-2">{t('auth.register_subtitle')}</p>
                 </div>
 
                 {error && (

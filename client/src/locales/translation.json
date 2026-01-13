@@ -30,10 +30,21 @@
         "verify_email_text": "Se existir uma conta com o email {email}, enviamos as instruções para redefinir sua senha.",
         "no_account": "Não tem uma conta?",
         "has_account": "Já tem uma conta?",
+        "remembered_password": "Lembrei a senha.",
         "login_link": "Faça login",
         "registering": "Cadastrando...",
         "register_error": "Falha no cadastro",
-        "email_placeholder": "seu@email.com"
+        "email_placeholder": "seu@email.com",
+        "new_password": "Nova Senha",
+        "confirm_new_password": "Confirmar Nova Senha",
+        "reset_password_title": "Nova Senha",
+        "reset_password_subtitle": "Escolha uma nova senha segura para sua conta.",
+        "reset_submit": "Alterar Senha",
+        "reset_success_title": "Senha Alterada!",
+        "reset_success_text": "Sua senha foi redefinida com sucesso. Você já pode acessar sua conta.",
+        "reset_error": "Erro ao redefinir senha. O link pode ter expirado.",
+        "password_too_short": "A senha deve ter pelo menos 6 caracteres.",
+        "passwords_do_not_match": "As senhas não coincidem."
     },
     "common": {
         "save": "Salvar",

@@ -17,6 +17,7 @@ import CostCenterForm from './pages/CostCenters/Form';
 import LogsList from './pages/Logs/List';
 import LogDetails from './pages/Logs/Details';
 import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import { Loader2 } from 'lucide-react';
 
 function PrivateRoute({ children }) {
@@ -43,6 +44,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/" element={<Navigate to="/dashboard" />} />
 
       <Route path="/" element={

@@ -59,6 +59,7 @@ export default function LogsList() {
                             <option value="LOGIN">LOGIN</option>
                             <option value="LOGOUT">LOGOUT</option>
                             <option value="REGISTER">REGISTER</option>
+                            <option value="PASSWORD_RESET">PASSWORD RESET</option>
                             <option value="FORGOT_PASSWORD_REQUEST">FORGOT PASSWORD</option>
                         </select>
                     </div>
@@ -116,9 +117,10 @@ export default function LogsList() {
                                             <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${log.action === 'CREATE' ? 'bg-emerald-50 text-emerald-600' :
                                                 log.action === 'UPDATE' ? 'bg-blue-50 text-blue-600' :
                                                     log.action === 'DELETE' ? 'bg-red-50 text-red-600' :
-                                                        'bg-slate-100 text-slate-600'
+                                                        log.action === 'PASSWORD_RESET' || log.action === 'FORGOT_PASSWORD_REQUEST' ? 'bg-orange-50 text-orange-600' :
+                                                            'bg-slate-100 text-slate-600'
                                                 }`}>
-                                                {log.action}
+                                                {log.action === 'FORGOT_PASSWORD_REQUEST' ? 'FORGOT PASSWORD' : log.action}
                                             </span>
                                         </td>
                                         <td className="p-4">
