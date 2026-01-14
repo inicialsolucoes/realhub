@@ -134,14 +134,9 @@ export default function UsersList() {
                                 <tr><td colSpan="5" className="p-8 text-center text-slate-500">{t('common.loading')}</td></tr>
                             )}
                             {!loading && users.map(user => (
-                                <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
-                                                <UserIcon className="w-5 h-5" />
-                                            </div>
-                                            <span className="font-medium text-slate-700 text-nowrap">{user.name}</span>
-                                        </div>
+                                <tr key={user.id} className="hover:bg-slate-50 transition-colors">
+                                    <td className="p-4 text-slate-600 text-sm text-nowrap">
+                                        {user.name}
                                     </td>
                                     <td className="p-4">
                                         <div className="flex flex-col gap-1">

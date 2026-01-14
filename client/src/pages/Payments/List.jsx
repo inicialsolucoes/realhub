@@ -3,7 +3,7 @@ import api from '../../lib/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../context/TranslationContext';
-import { Plus, Search, TrendingUp, TrendingDown, ChevronLeft, ChevronRight, Building2, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, TrendingUp, TrendingDown, ChevronLeft, ChevronRight, Building2, Edit, Trash2, Eye } from 'lucide-react';
 
 export default function PaymentsList() {
     const [payments, setPayments] = useState([]);
@@ -130,7 +130,7 @@ export default function PaymentsList() {
                                 <th className="p-4 font-semibold min-w-32 w-32">{t('payments.table.amount')}</th>
                                 <th className="p-4 font-semibold min-w-40 w-40">{t('payments.table.unit')}</th>
                                 <th className="p-4 font-semibold min-w-32 w-32">{t('payments.table.date')}</th>
-                                <th className="p-4 font-semibold text-right min-w-32 w-32">{t('payments.table.actions')}</th>
+                                <th className="p-4 font-semibold text-right min-w-40 w-40">{t('payments.table.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -140,8 +140,7 @@ export default function PaymentsList() {
                             {!loading && payments.map(payment => (
                                 <tr
                                     key={payment.id}
-                                    onClick={() => navigate(`/payments/${payment.id}`)}
-                                    className="hover:bg-slate-50/50 transition-colors cursor-pointer"
+                                    className="hover:bg-slate-50 transition-colors"
                                 >
                                     <td className="p-4 text-slate-600 text-sm text-nowrap">
                                         {payment.cost_center_name || '-'}
@@ -174,6 +173,12 @@ export default function PaymentsList() {
                                         {new Date(payment.date).toLocaleDateString()}
                                     </td>
                                     <td className="p-4 text-right space-x-2">
+                                        <button
+                                            onClick={() => navigate(`/payments/${payment.id}`)}
+                                            className="p-2 text-primary hover:bg-slate-100 rounded-lg transition-colors"
+                                        >
+                                            <Eye className="w-5 h-5" />
+                                        </button>
                                         {(user.role === 'admin' || user.id === payment.user_id) && (
                                             <>
                                                 <button

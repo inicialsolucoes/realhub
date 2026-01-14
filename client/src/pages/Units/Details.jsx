@@ -83,6 +83,10 @@ export default function UnitDetails() {
                             <span className="text-slate-500">{t('units.filters.casa')}</span>
                             <span className="font-medium">{unit.casa}</span>
                         </div>
+                        <div className="flex justify-between py-2 border-b border-slate-50">
+                            <span className="text-slate-500">{t('units.form.interfone')}</span>
+                            <span className="font-medium">{unit.interfone || '-'}</span>
+                        </div>
                         <div className="pt-2">
                             <span className="text-slate-500 block mb-1">{t('units.form.observation')}</span>
                             <p className="text-slate-700 bg-slate-50 p-3 rounded-lg text-sm">

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../../lib/api';
-import { Plus, Search, Building, Trash2, Edit, ChevronLeft, ChevronRight, Home } from 'lucide-react';
+import { Plus, Search, Building, Trash2, Edit, ChevronLeft, ChevronRight, Home, Eye } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../context/TranslationContext';
@@ -8,7 +8,7 @@ import { useTranslation } from '../../context/TranslationContext';
 export default function UnitsList() {
     const [units, setUnits] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filters, setFilters] = useState({ quadra: '', lote: '', casa: '' });
+    const [filters, setFilters] = useState({ quadra: '', lote: '', casa: '', resident_name: '' });
     const [page, setPage] = useState(1);
     const [meta, setMeta] = useState({});
     const { user } = useAuth();
@@ -92,9 +92,17 @@ export default function UnitsList() {
                             placeholder={t('units.filters.search_casa')}
                         />
                     </div>
-                    {/* Empty col for spacing if needed or just button */}
-                    <div className="md:col-span-2">
-                        <button type="submit" className="btn btn-outline flex items-center justify-center gap-2 h-[38px] w-full md:w-auto">
+                    <div>
+                        <label className="text-xs font-semibold text-slate-500 uppercase mb-1 block">{t('users.title')}</label>
+                        <input
+                            className="input w-full text-sm py-1"
+                            value={filters.resident_name}
+                            onChange={e => setFilters({ ...filters, resident_name: e.target.value })}
+                            placeholder={t('units.filters.search_resident')}
+                        />
+                    </div>
+                    <div>
+                        <button type="submit" className="btn btn-outline flex items-center justify-center gap-2 h-[38px] w-full">
                             <Search className="w-4 h-4" /> {t('payments.filters.filter_button')}
                         </button>
                     </div>
@@ -107,8 +115,9 @@ export default function UnitsList() {
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-100 text-xs text-slate-500 uppercase">
                                 <th className="p-4 font-semibold">{t('units.table.identification')}</th>
+                                <th className="p-4 font-semibold min-w-32 w-32">{t('units.table.interfone')}</th>
                                 <th className="p-4 font-semibold text-center min-w-32 w-32">{t('units.table.residents')}</th>
-                                <th className="p-4 font-semibold text-right min-w-32 w-32">{t('common.actions')}</th>
+                                <th className="p-4 font-semibold text-right min-w-40 w-40">{t('common.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -118,19 +127,13 @@ export default function UnitsList() {
                             {!loading && units.map((unit) => (
                                 <tr
                                     key={unit.id}
-                                    onClick={() => navigate(`/units/${unit.id}`)}
-                                    className="hover:bg-slate-50/50 transition-colors cursor-pointer"
+                                    className="hover:bg-slate-50 transition-colors"
                                 >
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
-                                                <Building className="w-5 h-5" />
-                                            </div>
-                                            <div>
-                                                <span className="font-medium text-slate-700 block">{t('units.table.quadra')} {unit.quadra}</span>
-                                                <span className="text-xs text-slate-500">{t('units.table.lote')} {unit.lote} • {t('units.table.casa')} {unit.casa}</span>
-                                            </div>
-                                        </div>
+                                    <td className="p-4 text-slate-600 text-sm text-nowrap">
+                                        {t('units.table.quadra')} {unit.quadra} • {t('units.table.lote')} {unit.lote} • {t('units.table.casa')} {unit.casa}
+                                    </td>
+                                    <td className="p-4 text-slate-600 text-sm">
+                                        {unit.interfone || '-'}
                                     </td>
                                     <td className="p-4 text-center">
                                         <span className="inline-flex items-center justify-center min-w-[2rem] h-6 px-2 rounded-full bg-slate-100 text-xs font-medium text-slate-600">
@@ -138,10 +141,16 @@ export default function UnitsList() {
                                         </span>
                                     </td>
                                     <td className="p-4 text-right space-x-2">
+                                        <button
+                                            onClick={() => navigate(`/units/${unit.id}`)}
+                                            className="p-2 text-primary hover:bg-slate-100 rounded-lg transition-colors"
+                                        >
+                                            <Eye className="w-5 h-5" />
+                                        </button>
                                         {user.role === 'admin' && (
                                             <>
                                                 <button
-                                                    onClick={(e) => { e.stopPropagation(); navigate(`/units/${unit.id}/edit`); }}
+                                                    onClick={() => navigate(`/units/${unit.id}/edit`)}
                                                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                                 >
                                                     <Edit className="w-4 h-4" />

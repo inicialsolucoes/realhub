@@ -105,13 +105,8 @@ export default function LogsList() {
                             ) : (
                                 logs.map(log => (
                                     <tr key={log.id} className="hover:bg-slate-50 transition-colors">
-                                        <td className="p-4">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
-                                                    <UserIcon className="w-5 h-5" />
-                                                </div>
-                                                <span className="font-medium text-slate-700 text-nowrap">{log.user_name || t('common.system')}</span>
-                                            </div>
+                                        <td className="p-4 text-slate-600 text-sm text-nowrap">
+                                            {log.user_name || t('common.system')}
                                         </td>
                                         <td className="p-4">
                                             <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${log.action === 'CREATE' ? 'bg-emerald-50 text-emerald-600' :

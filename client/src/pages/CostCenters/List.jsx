@@ -95,15 +95,10 @@ export default function CostCentersList() {
                             {!loading && costCenters.map((cc) => (
                                 <tr
                                     key={cc.id}
-                                    className="hover:bg-slate-50/50 transition-colors"
+                                    className="hover:bg-slate-50 transition-colors"
                                 >
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
-                                                <Folder className="w-5 h-5" />
-                                            </div>
-                                            <span className="font-medium text-slate-700 text-nowrap">{cc.name}</span>
-                                        </div>
+                                    <td className="p-4 text-slate-600 text-sm text-nowrap">
+                                        {cc.name}
                                     </td>
                                     <td className="p-4">
                                         {cc.type === 'income' ? (

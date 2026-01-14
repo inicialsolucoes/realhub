@@ -76,20 +76,23 @@
             "casa": "Casa",
             "search_quadra": "Buscar quadra...",
             "search_lote": "Buscar lote...",
-            "search_casa": "Buscar casa..."
+            "search_casa": "Buscar casa...",
+            "search_resident": "Buscar morador..."
         },
         "table": {
             "quadra": "Quadra",
             "lote": "Lote",
             "casa": "Casa",
             "identification": "Identificação",
+            "interfone": "Interfone",
             "residents": "Moradores",
             "no_units_found": "Nenhuma unidade encontrada"
         },
         "form": {
             "edit_title": "Editar Unidade",
             "new_title": "Nova Unidade",
-            "observation": "Observação"
+            "observation": "Observação",
+            "interfone": "Interfone"
         },
         "details": {
             "title_prefix": "Unidade",

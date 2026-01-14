@@ -11,7 +11,7 @@ export default function UnitForm() {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        quadra: '', lote: '', casa: '', observacao: ''
+        quadra: '', lote: '', casa: '', observacao: '', interfone: ''
     });
 
     useEffect(() => {
@@ -21,7 +21,8 @@ export default function UnitForm() {
                     quadra: data.quadra,
                     lote: data.lote,
                     casa: data.casa,
-                    observacao: data.observacao || ''
+                    observacao: data.observacao || '',
+                    interfone: data.interfone || ''
                 });
             }).catch(() => navigate('/units'));
         }
@@ -83,6 +84,16 @@ export default function UnitForm() {
                             value={formData.casa}
                             onChange={e => setFormData({ ...formData, casa: e.target.value })}
                             required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="label">{t('units.form.interfone')}</label>
+                        <input
+                            className="input"
+                            value={formData.interfone}
+                            onChange={e => setFormData({ ...formData, interfone: e.target.value })}
+                            placeholder={t('units.form.interfone')}
                         />
                     </div>
 

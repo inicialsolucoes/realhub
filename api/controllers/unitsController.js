@@ -6,38 +6,39 @@ exports.findAll = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
-    const { quadra, lote, casa } = req.query;
+    const { quadra, lote, casa, resident_name } = req.query;
 
-    let query = `
-        SELECT u.*, 
-        (SELECT COUNT(*) FROM users WHERE unit_id = u.id) as residents_count 
-        FROM units u
-    `;
-    let countQuery = 'SELECT COUNT(*) as total FROM units u';
     let params = [];
     let conditions = [];
 
     if (quadra) { conditions.push('u.quadra = ?'); params.push(quadra); }
     if (lote) { conditions.push('u.lote = ?'); params.push(lote); }
     if (casa) { conditions.push('u.casa = ?'); params.push(casa); }
-
-    if (conditions.length > 0) {
-        const where = ' WHERE ' + conditions.join(' AND ');
-        query += where;
-        countQuery += where;
+    if (resident_name) {
+        conditions.push('res.name LIKE ?');
+        params.push(`%${resident_name}%`);
     }
 
-    query += ' ORDER BY u.quadra, u.lote, u.casa LIMIT ? OFFSET ?';
-    params.push(limit, offset);
+    const where = conditions.length > 0 ? ' WHERE ' + conditions.join(' AND ') : '';
+    const join = resident_name ? ' INNER JOIN users res ON res.unit_id = u.id' : '';
 
-    // Count params exclude limit/offset
-    const countParams = params.slice(0, -2);
+    const query = `
+        SELECT DISTINCT u.*, 
+        (SELECT COUNT(*) FROM users WHERE unit_id = u.id) as residents_count 
+        FROM units u
+        ${join}
+        ${where}
+        ORDER BY u.quadra, u.lote, u.casa
+        LIMIT ? OFFSET ?
+    `;
+
+    const countQuery = `SELECT COUNT(DISTINCT u.id) as total FROM units u ${join} ${where}`;
 
     try {
-        const [totalRows] = await db.query(countQuery, countParams);
+        const [totalRows] = await db.query(countQuery, params);
         const total = totalRows[0].total;
 
-        const [rows] = await db.query(query, params);
+        const [rows] = await db.query(query, [...params, limit, offset]);
 
         res.status(200).send({
             data: rows,
@@ -67,15 +68,15 @@ exports.findOne = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-    const { quadra, lote, casa, observacao } = req.body;
+    const { quadra, lote, casa, observacao, interfone } = req.body;
     try {
         const [result] = await db.execute(
-            'INSERT INTO units (quadra, lote, casa, observacao) VALUES (?, ?, ?, ?)',
-            [quadra, lote, casa, observacao]
+            'INSERT INTO units (quadra, lote, casa, observacao, interfone) VALUES (?, ?, ?, ?, ?)',
+            [quadra, lote, casa, observacao, interfone]
         );
 
         // LOG CREATE
-        const logData = { quadra, lote, casa, observacao };
+        const logData = { quadra, lote, casa, observacao, interfone };
         await logAction(req.userId, 'CREATE', 'unit', result.insertId, logData, req.ip);
 
         res.status(201).send({ message: "Unit created", id: result.insertId });
@@ -85,19 +86,19 @@ exports.create = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-    const { quadra, lote, casa, observacao } = req.body;
+    const { quadra, lote, casa, observacao, interfone } = req.body;
     try {
         // Fetch current state for log
-        const [oldRows] = await db.execute('SELECT quadra, lote, casa, observacao FROM units WHERE id = ?', [req.params.id]);
+        const [oldRows] = await db.execute('SELECT quadra, lote, casa, observacao, interfone FROM units WHERE id = ?', [req.params.id]);
         const oldData = oldRows[0];
 
         await db.execute(
-            'UPDATE units SET quadra = ?, lote = ?, casa = ?, observacao = ? WHERE id = ?',
-            [quadra, lote, casa, observacao, req.params.id]
+            'UPDATE units SET quadra = ?, lote = ?, casa = ?, observacao = ?, interfone = ? WHERE id = ?',
+            [quadra, lote, casa, observacao, interfone, req.params.id]
         );
 
         // LOG UPDATE
-        const newData = { quadra, lote, casa, observacao };
+        const newData = { quadra, lote, casa, observacao, interfone };
         await logAction(req.userId, 'UPDATE', 'unit', req.params.id, { old: oldData, new: newData }, req.ip);
 
         res.status(200).send({ message: "Unit updated" });
