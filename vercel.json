@@ -20,13 +20,11 @@
     },
     {
       "src": "/reset-password/(.*)",
-      "dest": "/client/$1",
-      "status": 200
+      "dest": "/client/reset-password/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/client/$1",
-      "status": 200
+      "dest": "/client/$1"
     }
   ]
 }
