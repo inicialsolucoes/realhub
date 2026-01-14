@@ -19,10 +19,6 @@
       "dest": "/api/index.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/client/$1"
-    },
-    {
       "src": "/[^.]+[^/]",
       "dest": "/client/$1",
       "status": 200
