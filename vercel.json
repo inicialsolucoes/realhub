@@ -20,7 +20,7 @@
     },
     {
       "src": "/reset-password/(.*)",
-      "dest": "/client/reset-password/$1"
+      "dest": "/client/index.html"
     },
     {
       "src": "/(.*)",
