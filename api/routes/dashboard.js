@@ -5,5 +5,6 @@ const { verifyToken } = require('../middleware/auth');
 
 router.get('/stats', verifyToken, controller.getStats);
 router.get('/activity-logs', verifyToken, controller.getActivities);
+router.get('/latest-payments', verifyToken, controller.getLatestPayments);
 
 module.exports = router;

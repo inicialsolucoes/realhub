@@ -209,7 +209,9 @@
         "evolution": "Evolução Financeira (12 Meses)",
         "cash_flow_report_soon": "Relatório de Pagamentos (Em breve)",
         "recent_activities": "Atividades Recentes",
-        "no_recent_activities": "Nenhuma atividade recente"
+        "no_recent_activities": "Nenhuma atividade recente",
+        "recent_payments": "Pagamentos Recentes",
+        "no_recent_payments": "Nenhum pagamento recente"
     },
     "entities": {
         "user": "morador",

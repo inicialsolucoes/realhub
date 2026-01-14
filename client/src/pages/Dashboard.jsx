@@ -7,18 +7,21 @@ import { useTranslation } from '../context/TranslationContext';
 export default function Dashboard() {
     const [statsData, setStatsData] = useState({ units: 0, residents: 0, income: 0, expense: 0, history: [] });
     const [activities, setActivities] = useState([]);
+    const [payments, setPayments] = useState([]);
     const [loading, setLoading] = useState(true);
     const { t } = useTranslation();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [statsRes, activitiesRes] = await Promise.all([
+                const [statsRes, activitiesRes, paymentsRes] = await Promise.all([
                     api.get('/dashboard/stats'),
-                    api.get('/dashboard/activity-logs')
+                    api.get('/dashboard/activity-logs'),
+                    api.get('/dashboard/latest-payments')
                 ]);
                 setStatsData(statsRes.data);
                 setActivities(activitiesRes.data);
+                setPayments(paymentsRes.data);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -120,8 +123,50 @@ export default function Dashboard() {
             </div>
 
             <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="card h-64 flex flex-col justify-center items-center text-slate-400">
-                    <p>{t('dashboard.cash_flow_report_soon')}</p>
+                <div className="card max-h-[400px] overflow-hidden flex flex-col">
+                    <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <Wallet className="w-5 h-5 text-primary" /> {t('dashboard.recent_payments')}
+                    </h2>
+                    <div className="flex-1 overflow-x-auto custom-scrollbar">
+                        <table className="w-full text-left border-collapse min-w-[300px]">
+                            <thead>
+                                <tr className="text-[10px] text-slate-400 uppercase font-bold border-b border-slate-50">
+                                    <th className="pb-2 font-bold min-w-24 w-24">{t('payments.table.date')}</th>
+                                    <th className="pb-2 font-bold">{t('payments.table.cost_center')}</th>
+                                    <th className="pb-2 font-bold min-w-20 w-20">{t('payments.table.type')}</th>
+                                    <th className="pb-2 font-bold text-right min-w-32 w-32">{t('payments.table.amount')}</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-50">
+                                {payments.length > 0 ? (
+                                    payments.map((payment, idx) => (
+                                        <tr key={idx} className="text-sm">
+                                            <td className="py-3 text-slate-500 whitespace-nowrap">
+                                                {new Date(payment.date).toLocaleDateString()}
+                                            </td>
+                                            <td className="py-3 text-slate-700 font-medium truncate max-w-[120px]">
+                                                {payment.cost_center_name || '-'}
+                                            </td>
+                                            <td className="py-3">
+                                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${payment.type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
+                                                    {payment.type === 'income' ? t('payments.income') : t('payments.expense')}
+                                                </span>
+                                            </td>
+                                            <td className={`py-3 text-right font-bold ${payment.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
+                                                {formatCurrency(payment.amount)}
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4" className="py-8 text-center text-slate-400">
+                                            {t('payments.table.no_results')}
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div className="card max-h-[400px] overflow-hidden flex flex-col">
                     <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">

@@ -65,3 +65,19 @@ exports.getActivities = async (req, res) => {
         res.status(500).send({ message: error.message });
     }
 };
+
+exports.getLatestPayments = async (req, res) => {
+    try {
+        const query = `
+            SELECT p.date, p.type, p.amount, c.name as cost_center_name 
+            FROM payments p 
+            LEFT JOIN cost_centers c ON p.cost_center_id = c.id 
+            ORDER BY p.date DESC 
+            LIMIT 10
+        `;
+        const [rows] = await db.query(query);
+        res.status(200).send(rows);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+};
