@@ -19,8 +19,13 @@
       "dest": "/api/index.js"
     },
     {
+      "src": "/reset-password/(.*)",
+      "dest": "/client/$1",
+      "status": 200
+    },
+    {
       "src": "/(.*)",
-      "dest": "/index.html",
+      "dest": "/client/$1",
       "status": 200
     }
   ]
