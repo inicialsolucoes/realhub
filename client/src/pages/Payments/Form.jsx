@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../lib/api';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Loader2, Upload } from 'lucide-react';
+import { ArrowLeft, Loader2, Upload, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../context/TranslationContext';
 
@@ -63,7 +63,12 @@ export default function PaymentForm() {
             if (isEdit) {
                 await api.put(`/payments/${id}`, formData);
             } else {
-                await api.post('/payments', formData);
+                const response = await api.post('/payments', formData);
+
+                // Show success message for bulk creation
+                if (response.data.count && response.data.count > 1) {
+                    alert(`✓ ${response.data.count} pagamentos pendentes criados com sucesso!`);
+                }
             }
             navigate('/payments');
         } catch (error) {
@@ -135,13 +140,16 @@ export default function PaymentForm() {
                         <div>
                             <label className="label">{t('payments.form.type')}</label>
                             <select
-                                className="input bg-slate-50 cursor-not-allowed"
+                                className={`input ${user.role !== 'admin' ? 'bg-slate-50 cursor-not-allowed' : ''}`}
                                 value={formData.type}
                                 onChange={e => setFormData({ ...formData, type: e.target.value })}
-                                disabled
+                                disabled={user.role !== 'admin'}
                             >
                                 <option value="income">{t('payments.income')}</option>
                                 <option value="expense">{t('payments.expense')}</option>
+                                {user.role === 'admin' && (
+                                    <option value="pending">{t('payments.pending')}</option>
+                                )}
                             </select>
                         </div>
                         <div>
@@ -162,6 +170,17 @@ export default function PaymentForm() {
                             </select>
                         </div>
                     </div>
+
+                    {/* Warning message for pending payments without unit */}
+                    {user.role === 'admin' && formData.type === 'pending' && !formData.unit_id && (
+                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
+                            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                            <div className="text-sm text-amber-800">
+                                <p className="font-semibold mb-1">{t('payments.form.bulk_warning_title')}</p>
+                                <p>{t('payments.form.bulk_warning_message')}</p>
+                            </div>
+                        </div>
+                    )}
 
                     <div>
                         <label className="label">{t('payments.form.proof')}</label>

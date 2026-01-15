@@ -153,6 +153,7 @@
         "new": "Novo Lançamento",
         "income": "Entrada",
         "expense": "Saída",
+        "pending": "Pendente",
         "amount": "Valor",
         "date": "Data",
         "proof": "Comprovante",
@@ -187,7 +188,9 @@
             "description": "Descrição (Opcional)",
             "upload_hint": "Clique para fazer upload",
             "file_selected": "Arquivo selecionado!",
-            "select_placeholder": "Selecione..."
+            "select_placeholder": "Selecione...",
+            "bulk_warning_title": "Atenção: Cobrança em massa",
+            "bulk_warning_message": "Como nenhuma unidade foi selecionada, este pagamento pendente será criado para TODAS as unidades cadastradas no sistema."
         },
         "details": {
             "title": "Detalhes do Lançamento",

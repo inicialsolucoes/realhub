@@ -3,7 +3,7 @@ import api from '../../lib/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../context/TranslationContext';
-import { Plus, Search, TrendingUp, TrendingDown, ChevronLeft, ChevronRight, Building2, Edit, Trash2, Eye } from 'lucide-react';
+import { Plus, Search, TrendingUp, TrendingDown, ChevronLeft, ChevronRight, Building2, Edit, Trash2, Eye, Clock } from 'lucide-react';
 
 export default function PaymentsList() {
     const [payments, setPayments] = useState([]);
@@ -150,13 +150,20 @@ export default function PaymentsList() {
                                             <span className="inline-flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full text-xs font-medium">
                                                 <TrendingUp className="w-3 h-3" /> {t('payments.income')}
                                             </span>
-                                        ) : (
+                                        ) : payment.type === 'expense' ? (
                                             <span className="inline-flex items-center gap-1 text-red-600 bg-red-50 px-2 py-1 rounded-full text-xs font-medium">
                                                 <TrendingDown className="w-3 h-3" /> {t('payments.expense')}
                                             </span>
+                                        ) : (
+                                            <span className="inline-flex items-center gap-1 text-amber-600 bg-amber-50 px-2 py-1 rounded-full text-xs font-medium">
+                                                <Clock className="w-3 h-3" /> {t('payments.pending')}
+                                            </span>
                                         )}
                                     </td>
-                                    <td className={`p-4 font-bold ${payment.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
+                                    <td className={`p-4 font-bold ${payment.type === 'income' ? 'text-emerald-600' :
+                                            payment.type === 'expense' ? 'text-red-600' :
+                                                'text-amber-600'
+                                        }`}>
                                         R$ {parseFloat(payment.amount).toFixed(2)}
                                     </td>
                                     <td className="p-4">

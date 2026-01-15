@@ -141,10 +141,47 @@ exports.create = async (req, res) => {
             if (linkRows.length === 0) return res.status(403).send({ message: "You are not linked to this cost center" });
         }
 
-        type = ccRows[0].type;
+        // Admin can override type, otherwise use cost center type
+        if (req.userRole === 'admin' && type) {
+            // Admin explicitly set the type (including 'pending')
+            type = type;
+        } else {
+            type = ccRows[0].type;
+        }
 
+        // Special handling for pending payments without unit (bulk creation)
+        if (req.userRole === 'admin' && type === 'pending' && !unit_id) {
+            // Fetch all units
+            const [units] = await db.query('SELECT id FROM units ORDER BY quadra, lote, casa');
 
+            if (units.length === 0) {
+                return res.status(400).send({ message: "No units found to create pending payments" });
+            }
 
+            const createdIds = [];
+
+            // Create a pending payment for each unit
+            for (const unit of units) {
+                const [result] = await db.query(
+                    'INSERT INTO payments (date, type, amount, proof, description, unit_id, user_id, cost_center_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                    [date, type, amount, proof, description || null, unit.id, req.userId, cost_center_id]
+                );
+
+                createdIds.push(result.insertId);
+
+                // LOG CREATE for each payment
+                const logData = { date, type, amount, proof: proof ? '(file)' : null, description, unit_id: unit.id, cost_center_id };
+                await logAction(req.userId, 'CREATE', 'payment', result.insertId, logData, req.ip);
+            }
+
+            return res.status(201).send({
+                message: `${units.length} pending payments created successfully`,
+                count: units.length,
+                ids: createdIds
+            });
+        }
+
+        // Normal single payment creation
         const [result] = await db.query(
             'INSERT INTO payments (date, type, amount, proof, description, unit_id, user_id, cost_center_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             [date, type, amount, proof, description || null, unit_id, req.userId, cost_center_id]
@@ -174,10 +211,7 @@ exports.update = async (req, res) => {
             return res.status(403).send({ message: "You can only edit payments you created" });
         }
 
-        const { date, type, amount, proof, description, unit_id, cost_center_id } = req.body;
-        // Morador restriction on update? Assuming they can update what they sent, but maybe not change Type/Unit freely?
-        // Spec is loose using "Editar". I'll allow full edit but force Type=Income if morador?
-        // "Conseguir registrar ... somente tipo entrada". Probably applies to edit too.
+        let { date, type, amount, proof, description, unit_id, cost_center_id } = req.body;
 
         if (!cost_center_id) {
             return res.status(400).send({ message: "Cost center is required" });
@@ -193,7 +227,18 @@ exports.update = async (req, res) => {
             if (linkRows.length === 0) return res.status(403).send({ message: "You are not linked to this cost center" });
         }
 
-        const finalType = ccRows[0].type;
+        // Admin can override type, otherwise use cost center type
+        let finalType;
+        if (req.userRole === 'admin' && type) {
+            finalType = type;
+        } else {
+            finalType = ccRows[0].type;
+        }
+
+        // If admin is changing type to pending, remove the proof
+        if (req.userRole === 'admin' && finalType === 'pending') {
+            proof = null;
+        }
 
         let finalUnitId = unit_id;
         if (!finalUnitId || finalUnitId === '') finalUnitId = null;
@@ -242,6 +287,53 @@ exports.delete = async (req, res) => {
         await logAction(req.userId, 'DELETE', 'payment', req.params.id, deletedData, req.ip);
 
         res.status(200).send({ message: "Payment deleted" });
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+};
+
+exports.submitProof = async (req, res) => {
+    const { proof } = req.body;
+
+    if (!proof) {
+        return res.status(400).send({ message: "Proof is required" });
+    }
+
+    try {
+        // Fetch the payment to check ownership and current state
+        const [rows] = await db.query('SELECT type, unit_id, user_id FROM payments WHERE id = ?', [req.params.id]);
+        if (rows.length === 0) return res.status(404).send({ message: "Payment not found" });
+
+        const payment = rows[0];
+
+        // Check if payment is pending
+        if (payment.type !== 'pending') {
+            return res.status(400).send({ message: "Only pending payments can have proof submitted" });
+        }
+
+        // Check permissions: user must be linked to the unit or be admin
+        if (req.userRole !== 'admin') {
+            if (!payment.unit_id || payment.unit_id !== req.unitId) {
+                return res.status(403).send({ message: "You can only submit proof for payments linked to your unit" });
+            }
+        }
+
+        // Fetch old data for logging
+        const [oldRows] = await db.query('SELECT date, type, amount, proof, description, unit_id, cost_center_id FROM payments WHERE id = ?', [req.params.id]);
+        const oldData = oldRows[0];
+        if (oldData && oldData.proof) oldData.proof = '(file)';
+
+        // Update payment: set proof and change type to 'income'
+        await db.query(
+            'UPDATE payments SET proof = ?, type = ? WHERE id = ?',
+            [proof, 'income', req.params.id]
+        );
+
+        // LOG UPDATE
+        const newData = { ...oldData, proof: '(file)', type: 'income' };
+        await logAction(req.userId, 'UPDATE', 'payment', req.params.id, { old: oldData, new: newData }, req.ip);
+
+        res.status(200).send({ message: "Proof submitted and payment marked as income" });
     } catch (error) {
         res.status(500).send({ message: error.message });
     }

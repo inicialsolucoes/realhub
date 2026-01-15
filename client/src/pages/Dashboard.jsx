@@ -148,11 +148,19 @@ export default function Dashboard() {
                                                 {payment.cost_center_name || '-'}
                                             </td>
                                             <td className="py-3">
-                                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${payment.type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
-                                                    {payment.type === 'income' ? t('payments.income') : t('payments.expense')}
+                                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${payment.type === 'income' ? 'bg-emerald-50 text-emerald-600' :
+                                                        payment.type === 'expense' ? 'bg-red-50 text-red-600' :
+                                                            'bg-amber-50 text-amber-600'
+                                                    }`}>
+                                                    {payment.type === 'income' ? t('payments.income') :
+                                                        payment.type === 'expense' ? t('payments.expense') :
+                                                            t('payments.pending')}
                                                 </span>
                                             </td>
-                                            <td className={`py-3 text-right font-bold ${payment.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
+                                            <td className={`py-3 text-right font-bold ${payment.type === 'income' ? 'text-emerald-600' :
+                                                    payment.type === 'expense' ? 'text-red-600' :
+                                                        'text-amber-600'
+                                                }`}>
                                                 {formatCurrency(payment.amount)}
                                             </td>
                                         </tr>
