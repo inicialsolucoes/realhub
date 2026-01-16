@@ -72,8 +72,8 @@ export default function ResetPassword() {
                         <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                             <Building2 className="w-5 h-5 text-white" />
                         </div>
-                        <h1 className="text-xl font-bold tracking-tight">RealHub</h1>
-                        <p className="mt-2 text-xs text-slate-400 uppercase tracking-wider font-medium">Residencial Costa Real 1</p>
+                        <h1 className="text-xl font-bold tracking-tight">{t('app.name')}</h1>
+                        <p className="mt-2 text-xs text-slate-400 uppercase tracking-wider font-medium">{t('condominium.name')}</p>
                     </div>
                     <h2 className="text-2xl font-bold text-slate-800">{t('auth.reset_password_title') || 'Nova Senha'}</h2>
                     <p className="text-slate-500 mt-2">{t('auth.reset_password_subtitle') || 'Escolha uma nova senha segura para sua conta.'}</p>

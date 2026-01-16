@@ -57,9 +57,9 @@ export default function DashboardLayout() {
                         <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                             <Building2 className="w-5 h-5 text-white" />
                         </div>
-                        <h1 className="text-xl font-bold tracking-tight">RealHub</h1>
+                        <h1 className="text-xl font-bold tracking-tight">{t('app.name')}</h1>
                     </div>
-                    <p className="mt-2 text-xs text-slate-400 uppercase tracking-wider font-medium">Residencial Costa Real 1</p>
+                    <p className="mt-2 text-xs text-slate-400 uppercase tracking-wider font-medium">{t('condominium.name')}</p>
                 </div>
 
                 <nav className="p-4 space-y-1">
@@ -118,7 +118,7 @@ export default function DashboardLayout() {
                     <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 -ml-2 text-slate-600">
                         <Menu className="w-6 h-6" />
                     </button>
-                    <span className="font-bold text-primary-dark">RealHub</span>
+                    <span className="font-bold text-primary-dark">{t('app.name')}</span>
                     <div className="w-8" /> {/* Spacer */}
                 </header>
 

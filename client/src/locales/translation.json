@@ -1,4 +1,7 @@
 {
+    "condominium": {
+        "name": "Residencial Costa Real 1"
+    },
     "app": {
         "name": "RealHub",
         "dashboard": "Painel",

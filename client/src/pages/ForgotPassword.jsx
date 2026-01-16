@@ -35,8 +35,8 @@ export default function ForgotPassword() {
                                 <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                                     <Building2 className="w-5 h-5 text-white" />
                                 </div>
-                                <h1 className="text-xl font-bold tracking-tight">RealHub</h1>
-                                <p className="mt-2 text-xs text-slate-400 uppercase tracking-wider font-medium">Residencial Costa Real 1</p>
+                                <h1 className="text-xl font-bold tracking-tight">{t('app.name')}</h1>
+                                <p className="mt-2 text-xs text-slate-400 uppercase tracking-wider font-medium">{t('condominium.name')}</p>
                             </div>
                             <h2 className="text-2xl font-bold text-slate-800">{t('auth.forgot_password_title')}</h2>
                             <p className="text-slate-500 mt-2">{t('auth.forgot_password_subtitle')}</p>
