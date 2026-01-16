@@ -271,15 +271,16 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-    // Admin only
-    if (req.userRole !== 'admin') {
-        return res.status(403).send({ message: "Only admin can delete" });
-    }
-
+    
     try {
         // Fetch data before deletion for logging
-        const [rows] = await db.query('SELECT date, type, amount, description, unit_id, cost_center_id FROM payments WHERE id = ?', [req.params.id]);
+        const [rows] = await db.query('SELECT date, type, amount, description, user_id, unit_id, cost_center_id FROM payments WHERE id = ?', [req.params.id]);
         const deletedData = rows.length > 0 ? rows[0] : null;
+
+        // Admin only
+        if (req.userRole !== 'admin' && req.userId !== deletedData.user_id) {
+            return res.status(403).send({ message: "You are not authorized to delete this payment" });
+        }
 
         await db.query('DELETE FROM payments WHERE id = ?', [req.params.id]);
 
