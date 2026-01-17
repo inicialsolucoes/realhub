@@ -1,19 +1,20 @@
 const db = require('../db');
 
 class PasswordResetRepository {
-    async create(email, token, expiresAt) {
-        // expiresAt can be passed or handled by SQL. Controller used DATE_ADD(NOW(), INTERVAL 1 HOUR)
-        // Let's stick to DB time for consistency with original code
+    async create(email, token) {
+        const now = new Date();
+        const expiresAt = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour from now
         await db.execute(
-            'INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))',
-            [email, token]
+            'INSERT INTO password_resets (email, token, expires_at, created_at) VALUES (?, ?, ?, ?)',
+            [email, token, expiresAt, now]
         );
     }
 
     async findActiveTokens() {
-        // Original code selects recent ones.
+        const now = new Date();
         const [rows] = await db.execute(
-            'SELECT * FROM password_resets WHERE expires_at > NOW() ORDER BY created_at DESC LIMIT 10'
+            'SELECT * FROM password_resets WHERE expires_at > ? ORDER BY created_at DESC LIMIT 10',
+            [now]
         );
         return rows;
     }

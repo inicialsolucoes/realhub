@@ -74,18 +74,20 @@ class UnitRepository {
 
     async create(data) {
         const { quadra, lote, casa, observacao, interfone } = data;
+        const now = new Date();
         const [result] = await db.execute(
-            'INSERT INTO units (quadra, lote, casa, observacao, interfone) VALUES (?, ?, ?, ?, ?)',
-            [quadra, lote, casa, observacao, interfone]
+            'INSERT INTO units (quadra, lote, casa, observacao, interfone, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [quadra, lote, casa, observacao, interfone, now, now]
         );
         return result.insertId;
     }
 
     async update(id, data) {
          const { quadra, lote, casa, observacao, interfone } = data;
+         const now = new Date();
          await db.execute(
-            'UPDATE units SET quadra = ?, lote = ?, casa = ?, observacao = ?, interfone = ? WHERE id = ?',
-            [quadra, lote, casa, observacao, interfone, id]
+            'UPDATE units SET quadra = ?, lote = ?, casa = ?, observacao = ?, interfone = ?, updated_at = ? WHERE id = ?',
+            [quadra, lote, casa, observacao, interfone, now, id]
         );
     }
 

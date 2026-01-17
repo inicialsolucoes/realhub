@@ -66,13 +66,21 @@ class CostCenterRepository {
     async create(data) {
         const { name, type } = data;
         const costCenterType = type || 'expense';
-        const [result] = await db.query('INSERT INTO cost_centers (name, type) VALUES (?, ?)', [name, costCenterType]);
+        const now = new Date();
+        const [result] = await db.query(
+            'INSERT INTO cost_centers (name, type, created_at, updated_at) VALUES (?, ?, ?, ?)',
+            [name, costCenterType, now, now]
+        );
         return result.insertId;
     }
 
     async update(id, data) {
         const { name, type } = data;
-        await db.query('UPDATE cost_centers SET name = ?, type = ? WHERE id = ?', [name, type || 'expense', id]);
+        const now = new Date();
+        await db.query(
+            'UPDATE cost_centers SET name = ?, type = ?, updated_at = ? WHERE id = ?',
+            [name, type || 'expense', now, id]
+        );
     }
 
     async delete(id) {

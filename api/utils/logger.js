@@ -12,9 +12,10 @@ const db = require('../db');
  */
 const logAction = async (userId, action, entityType = null, entityId = null, details = null, ipAddress = null) => {
     try {
+        const createdAt = new Date();
         await db.query(
-            'INSERT INTO activity_logs (user_id, action, entity_type, entity_id, details, ip_address) VALUES (?, ?, ?, ?, ?, ?)',
-            [userId, action, entityType, entityId, details ? JSON.stringify(details) : null, ipAddress]
+            'INSERT INTO activity_logs (user_id, action, entity_type, entity_id, details, ip_address, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [userId, action, entityType, entityId, details ? JSON.stringify(details) : null, ipAddress, createdAt]
         );
     } catch (error) {
         console.error('Failed to log action:', error);

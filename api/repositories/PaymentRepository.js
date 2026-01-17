@@ -93,18 +93,20 @@ class PaymentRepository {
 
     async create(data) {
         const { date, type, amount, proof, description, unit_id, user_id, cost_center_id } = data;
+        const now = new Date();
         const [result] = await db.query(
-            'INSERT INTO payments (date, type, amount, proof, description, unit_id, user_id, cost_center_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [date, type, amount, proof, description || null, unit_id, user_id, cost_center_id]
+            'INSERT INTO payments (date, type, amount, proof, description, unit_id, user_id, cost_center_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [date, type, amount, proof, description || null, unit_id, user_id, cost_center_id, now, now]
         );
         return result.insertId;
     }
 
     async update(id, data) {
          const { date, finalType, amount, proof, description, finalUnitId, cost_center_id } = data;
+         const now = new Date();
          await db.query(
-            'UPDATE payments SET date = ?, type = ?, amount = ?, proof = ?, description = ?, unit_id = ?, cost_center_id = ? WHERE id = ?',
-            [date, finalType, amount, proof, description || null, finalUnitId, cost_center_id, id]
+            'UPDATE payments SET date = ?, type = ?, amount = ?, proof = ?, description = ?, unit_id = ?, cost_center_id = ?, updated_at = ? WHERE id = ?',
+            [date, finalType, amount, proof, description || null, finalUnitId, cost_center_id, now, id]
         );
     }
 
@@ -131,17 +133,18 @@ class PaymentRepository {
     }
 
     async getHistory(months = 12) {
+        const now = new Date();
         const historyQuery = `
             SELECT 
                 DATE_FORMAT(date, '%Y-%m') as month,
                 SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) as income,
                 SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) as expense
             FROM payments
-            WHERE date >= DATE_SUB(LAST_DAY(NOW()), INTERVAL ? MONTH)
+            WHERE date >= DATE_SUB(LAST_DAY(?), INTERVAL ? MONTH)
             GROUP BY DATE_FORMAT(date, '%Y-%m')
             ORDER BY month ASC
         `;
-        const [history] = await db.query(historyQuery, [months]);
+        const [history] = await db.query(historyQuery, [now, months]);
         return history;
     }
 

@@ -4,12 +4,16 @@ const path = require('path');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
+if (process.env.TIMEZONE) {
+    process.env.TZ = process.env.TIMEZONE;
+}
+
 const pool = mysql.createPool({
     uri: process.env.DATABASE_URL,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-    timezone: '-03:00',
+    timezone: 'Z',
     ssl: {
         rejectUnauthorized: false
     }

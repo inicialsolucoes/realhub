@@ -75,18 +75,20 @@ class PostRepository {
 
     async create(data) {
         const { category, title, content, file, unit_id } = data;
+        const now = new Date();
         const [result] = await db.query(
-            'INSERT INTO posts (category, title, content, file, unit_id) VALUES (?, ?, ?, ?, ?)',
-            [category, title, content, file || null, unit_id || null]
+            'INSERT INTO posts (category, title, content, file, unit_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [category, title, content, file || null, unit_id || null, now, now]
         );
         return result.insertId;
     }
 
     async update(id, data) {
         const { category, title, content, file, unit_id } = data;
+        const now = new Date();
         await db.query(
-            'UPDATE posts SET category = ?, title = ?, content = ?, file = ?, unit_id = ? WHERE id = ?',
-            [category, title, content, file || null, unit_id || null, id]
+            'UPDATE posts SET category = ?, title = ?, content = ?, file = ?, unit_id = ?, updated_at = ? WHERE id = ?',
+            [category, title, content, file || null, unit_id || null, now, id]
         );
     }
 
@@ -95,9 +97,10 @@ class PostRepository {
     }
 
     async recordRead(postId, userId) {
+        const now = new Date();
         await db.query(
-            'INSERT INTO post_reads (post_id, user_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_read_at = CURRENT_TIMESTAMP',
-            [postId, userId]
+            'INSERT INTO post_reads (post_id, user_id, last_read_at) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE last_read_at = ?',
+            [postId, userId, now, now]
         );
     }
 

@@ -72,9 +72,10 @@ class UserRepository {
 
     async create(data) {
         const { name, email, password, phone, role, unit_id } = data;
+        const now = new Date();
         const [result] = await db.execute(
-            'INSERT INTO users (name, email, password, phone, role, unit_id) VALUES (?, ?, ?, ?, ?, ?)',
-            [name, email, password, phone, role, unit_id || null]
+            'INSERT INTO users (name, email, password, phone, role, unit_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [name, email, password, phone, role, unit_id || null, now, now]
         );
         return result.insertId;
     }
@@ -92,6 +93,9 @@ class UserRepository {
         if (data.password !== undefined) { updates.push("password = ?"); params.push(data.password); }
 
         if (updates.length > 0) {
+            const now = new Date();
+            updates.push("updated_at = ?");
+            params.push(now);
             query += updates.join(", ") + " WHERE id = ?";
             params.push(id);
             await db.execute(query, params);
