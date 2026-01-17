@@ -77,6 +77,7 @@ Create a `.env` file in the `api/` directory:
 PORT=3001
 TIMEZONE=America/Sao_Paulo
 JWT_SECRET=your_super_secure_secret_key
+# FRONTEND_URL=http://localhost:5173
 
 # DATABASE SETTINGS
 DATABASE_URL=mysql://user:password@host:3306/database_name
