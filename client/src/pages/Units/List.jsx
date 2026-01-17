@@ -160,11 +160,12 @@ export default function UnitsList() {
                                                 </button>
                                             </>
                                         )}
-                                        {!isAdmin && (
-                                            <Link to={`/units/${unit.id}`} className="p-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors inline-block">
-                                                 <ChevronRight className="w-4 h-4" />
-                                            </Link>
-                                        )}
+                                        <button
+                                            onClick={() => navigate(`/units/${unit.id}`)}
+                                            className="p-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors inline-block"
+                                        >
+                                            <ChevronRight className="w-4 h-4" />
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
