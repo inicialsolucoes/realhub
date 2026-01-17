@@ -16,9 +16,9 @@ A complete condominium management system with a Node.js/Express Backend and a Re
 - **Financial Control**: Payment registration (Inflow/Outflow) with support for proof of payment.
 - **Cost Centers**: Group payments and residents by specific departments or categories.
 - **Activity Logs**: Advanced auditing system for Admins.
-    - Track all Creations, Updates, and Deletions.
-    - **Side-by-side data comparison** for updates (Old vs. New values).
-    - IP Address and Timestamp tracking.
+  - Track all Creations, Updates, and Deletions.
+  - **Side-by-side data comparison** for updates (Old vs. New values).
+  - IP Address and Timestamp tracking.
 - **Dashboard**: Real-time stats and a live Activity Feed.
 - **Internationalization**: Fully localized UI (Portuguese/English support).
 
@@ -43,35 +43,51 @@ A complete condominium management system with a Node.js/Express Backend and a Re
 ## 🛠️ Local Setup & Execution
 
 ### Prerequisites
+
 - Node.js v18+
 - MySQL Database
 
 ### 1. Database Configuration
 
-You must execute the SQL scripts located in `api/migrations/` in sequential order. 
+You must execute the SQL scripts located in `api/migrations/` in sequential order.
 
 **Manual Execution:**
 Run the scripts in this specific order:
+
 1. `001_create_units.sql`
 2. `002_create_users.sql`
 3. `003_create_payments.sql`
-... and so on for all files up to `011_alter_units_lote_casa.sql`.
+   ... and so on for all files up to `011_alter_units_lote_casa.sql`.
 
 **Automated Execution (Linux/macOS):**
 If you have the `mysql` client installed, you can run all migrations at once from the root folder:
+
 ```bash
-for f in api/migrations/*.sql; do 
-  mysql -u YOUR_USER -pYOUR_PASS YOUR_DB_NAME < $f; 
+for f in api/migrations/*.sql; do
+  mysql -u YOUR_USER -pYOUR_PASS YOUR_DB_NAME < $f;
 done
 ```
 
 ### 2. Environment Variables
+
 Create a `.env` file in the `api/` directory:
 
 ```env
-DATABASE_URL=mysql://user:password@host:3306/database_name
-JWT_SECRET=your_super_secure_secret_key
+# CORE SETTINGS
 PORT=3001
+TIMEZONE=America/Sao_Paulo
+JWT_SECRET=your_super_secure_secret_key
+
+# DATABASE SETTINGS
+DATABASE_URL=mysql://user:password@host:3306/database_name
+
+# MAIL SETTINGS
+SMTP_HOST=smtp.host.com
+SMTP_PORT=587
+SMTP_USER=your_email@example.com
+SMTP_PASS=your_email_password
+SMTP_FROM=your_email@example.com
+SMTP_SECURE=false
 ```
 
 ### 3. Install Dependencies
@@ -91,12 +107,14 @@ npm install
 You will need two separate terminal windows:
 
 **Terminal 1 (Backend):**
+
 ```bash
 # From the /api directory
 npm start
 ```
 
 **Terminal 2 (Frontend):**
+
 ```bash
 # From the /client directory
 npm run dev
@@ -116,14 +134,15 @@ The project is pre-configured with `vercel.json` for seamless deployment.
 
 - **Admin**: Full access to all modules (Units, Users, Payments, Cost Centers, and Activity Logs).
 - **Resident (User)**:
-    - View their own household details.
-    - Register payments (Inflow).
-    - View payment history.
-    - Restricted from deleting any records.
+  - View their own household details.
+  - Register payments (Inflow).
+  - View payment history.
+  - Restricted from deleting any records.
 
 ## 🎨 Design System
 
 The project uses Tailwind CSS with a "Premium Blue" palette:
+
 - **Primary**: `#1d4ed8` (Deep Blue)
 - **Dark**: `#1e3a8a` (Professional Navy)
 - **Light**: `#0ea5e9` (Sky Blue)
