@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../lib/api';
 import { useTranslation } from '../../context/TranslationContext';
-import { Building2, TrendingUp, Clock, Search } from 'lucide-react';
+import { Building2, TrendingUp, Clock, Search, X } from 'lucide-react';
 
 export default function RevenueReport() {
     const { t } = useTranslation();
@@ -46,7 +46,7 @@ export default function RevenueReport() {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [filters.month, filters.year]);
 
     const handleFilter = (e) => {
         e.preventDefault();
@@ -98,18 +98,20 @@ export default function RevenueReport() {
                             value={filters.month}
                             onChange={(e) => setFilters({ ...filters, month: e.target.value })}
                         >
+                            <option value="all">Todos os meses</option>
                             {months.map(m => (
                                 <option key={m.value} value={m.value}>{m.label}</option>
                             ))}
                         </select>
                     </div>
-                    <div className="w-32">
+                    <div className="w-40">
                         <label className="text-xs font-semibold text-slate-500 uppercase mb-1 block">Ano</label>
                         <select
                             className="input w-full text-sm"
                             value={filters.year}
                             onChange={(e) => setFilters({ ...filters, year: e.target.value })}
                         >
+                            <option value="all">Todos os anos</option>
                             {years.map(y => (
                                 <option key={y} value={y}>{y}</option>
                             ))}
@@ -118,6 +120,15 @@ export default function RevenueReport() {
                     <button type="submit" className="btn btn-primary flex items-center gap-2 h-[38px]">
                         <Search className="w-4 h-4" /> {t('payments.filters.filter_button')}
                     </button>
+                    {(filters.month !== 'all' || filters.year !== 'all') && (
+                        <button 
+                            type="button" 
+                            onClick={() => setFilters({ month: 'all', year: 'all' })}
+                            className="btn btn-ghost text-slate-500 flex items-center gap-2 h-[38px]"
+                        >
+                            <X className="w-4 h-4" /> Limpar
+                        </button>
+                    )}
                 </form>
             </div>
 

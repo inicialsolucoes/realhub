@@ -1,9 +1,6 @@
-// DEBUG: V02
 const ReportRepository = require('../repositories/ReportRepository');
 
 exports.getRevenueReport = async (req, res) => {
-    console.log('--- DEBUG: getRevenueReport called ---');
-    console.log('req.userRole:', req.userRole);
     try {
         if (req.userRole !== 'admin') {
             return res.status(403).json({ message: 'Acesso negado' });
@@ -11,10 +8,9 @@ exports.getRevenueReport = async (req, res) => {
 
         const { month, year } = req.query;
         
-        // Use current date if not provided?
-        const now = new Date();
-        const filterMonth = month || (now.getMonth() + 1);
-        const filterYear = year || now.getFullYear();
+        // If filters are provided, use them. If they are 'all' or empty, let repository handle it.
+        const filterMonth = month === 'all' || !month ? null : month;
+        const filterYear = year === 'all' || !year ? null : year;
 
         const data = await ReportRepository.getRevenueReport({ 
             month: filterMonth, 
@@ -32,8 +28,8 @@ exports.getRevenueReport = async (req, res) => {
                 totalArrecadado
             },
             filters: {
-                month: parseInt(filterMonth),
-                year: parseInt(filterYear)
+                month: filterMonth ? parseInt(filterMonth) : 'all',
+                year: filterYear ? parseInt(filterYear) : 'all'
             }
         });
     } catch (error) {
