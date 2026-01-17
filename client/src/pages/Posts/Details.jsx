@@ -149,10 +149,13 @@ export default function PostDetails() {
                                                 <div className="font-medium text-slate-900">{reader.name}</div>
                                                 <div className="text-xs text-slate-500">{reader.email}</div>
                                             </td>
-                                            <td className="px-6 py-3 text-slate-600">
-                                                {reader.quadra ? `Q${reader.quadra} L${reader.lote} ${reader.casa ? `C${reader.casa}` : ''}` : '-'}
+                                            <td className="px-6 py-3 text-slate-600 text-nowrap">
+                                                <div className="flex items-center gap-2 text-slate-700 bg-slate-100 px-2 py-1 rounded text-sm w-fit">
+                                                    <Building2 className="w-3 h-3" />
+                                                    <span>Q{reader.quadra} L{reader.lote} {reader.casa ? `C${reader.casa}` : ''}</span>
+                                                </div>
                                             </td>
-                                            <td className="px-6 py-3 text-slate-500">
+                                            <td className="px-6 py-3 text-slate-500 text-nowrap">
                                                 {formatDateTime(reader.last_read_at)}
                                             </td>
                                         </tr>

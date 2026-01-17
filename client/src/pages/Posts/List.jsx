@@ -136,7 +136,7 @@ export default function PostsList() {
                             )}
                             {!loading && posts.map(post => (
                                 <tr key={post.id} className="hover:bg-slate-50 transition-colors">
-                                    <td className="p-4">
+                                    <td className="p-4 text-nowrap">
                                         <Link to={`/posts/${post.id}`} className="text-sm font-medium text-slate-700 hover:text-primary transition-colors flex items-center gap-2">
                                             {post.file && <FileText className="w-4 h-4 text-slate-400" />}
                                             {post.title}
