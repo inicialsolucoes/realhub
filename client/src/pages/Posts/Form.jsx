@@ -214,10 +214,7 @@ export default function PostForm() {
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-4 border-t">
-                        <Link to="/posts" className="btn btn-ghost">
-                            {t('common.cancel')}
-                        </Link>
+                    <div className="flex justify-end pt-8">
                         <button
                             type="submit"
                             disabled={loading}

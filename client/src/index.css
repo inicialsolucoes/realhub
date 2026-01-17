@@ -48,11 +48,50 @@
   @apply bg-slate-200 rounded-full hover:bg-slate-300;
 }
 
-/* Prose styles for links */
-.prose a {
-  @apply text-primary font-medium underline underline-offset-4 hover:text-primary-dark transition-colors;
+/* Prose styles for links and editor */
+.prose, .ql-editor {
+    @apply text-slate-700 leading-relaxed text-sm;
 }
 
-.prose p {
-    @apply mb-2 last:mb-0;
+.prose a, .ql-editor a {
+    @apply text-primary font-medium underline underline-offset-4 hover:text-primary-dark transition-colors !important;
+}
+
+.prose p, .ql-editor p {
+    @apply mb-4 last:mb-0;
+}
+
+.prose ul {
+    @apply list-disc list-inside mb-4 ml-4;
+}
+
+.ql-editor ul {
+    @apply list-disc list-outside mb-4 pl-5 !important;
+}
+
+.prose ol {
+    @apply list-decimal list-inside mb-4 ml-4;
+}
+
+.ql-editor ol {
+    @apply list-decimal list-outside mb-4 pl-5 !important;
+}
+
+.prose li, .ql-editor li {
+    @apply mb-2;
+}
+
+.prose h1, .ql-editor h1 { @apply text-2xl font-bold mb-4 text-slate-900; }
+.prose h2, .ql-editor h2 { @apply text-xl font-bold mb-3 text-slate-900; }
+
+.ql-container.ql-snow {
+    @apply border-slate-200 rounded-b-xl font-sans !important;
+}
+
+.ql-toolbar.ql-snow {
+    @apply border-slate-200 rounded-t-xl bg-slate-50/50 !important;
+}
+
+.ql-editor {
+    @apply min-h-[200px] !important;
 }
