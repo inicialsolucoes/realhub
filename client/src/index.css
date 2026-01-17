@@ -47,3 +47,12 @@
 .custom-scrollbar::-webkit-scrollbar-thumb {
   @apply bg-slate-200 rounded-full hover:bg-slate-300;
 }
+
+/* Prose styles for links */
+.prose a {
+  @apply text-primary font-medium underline underline-offset-4 hover:text-primary-dark transition-colors;
+}
+
+.prose p {
+    @apply mb-2 last:mb-0;
+}

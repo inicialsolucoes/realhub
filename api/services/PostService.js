@@ -32,6 +32,16 @@ class PostService {
             }
         }
 
+        // Record read
+        if (userId) {
+            await PostRepository.recordRead(id, userId);
+        }
+
+        // If admin, get readers list
+        if (userRole === 'admin') {
+            post.readers = await PostRepository.getReaders(id);
+        }
+
         return post;
     }
 

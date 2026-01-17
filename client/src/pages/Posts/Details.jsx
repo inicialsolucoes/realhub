@@ -4,6 +4,7 @@ import { ArrowLeft, Calendar, Building2, Download, Trash2, Edit } from 'lucide-r
 import api from '../../lib/api';
 import { useTranslation } from '../../context/TranslationContext';
 import { useAuth } from '../../context/AuthContext';
+import { formatDate, formatDateTime } from '../../utils/date';
 
 export default function PostDetails() {
     const { id } = useParams();
@@ -83,9 +84,9 @@ export default function PostDetails() {
                             {categoryLabels[post.category]}
                         </span>
                         <div className="flex items-center gap-4 text-sm text-slate-500">
-                             <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1.5">
                                 <Calendar className="w-4 h-4" />
-                                {new Date(post.created_at).toLocaleDateString()}
+                                {formatDate(post.created_at)}
                             </div>
                             {post.quadra && (
                                 <div className="flex items-center gap-1.5">
@@ -125,6 +126,49 @@ export default function PostDetails() {
                     )}
                 </div>
             </div>
+
+            {isAdmin && (
+                <div className="card">
+                    <div className="p-4 border-b bg-slate-50/50">
+                        <h3 className="font-semibold text-slate-800">{t('posts.details.readers.title')}</h3>
+                    </div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left text-sm">
+                            <thead>
+                                <tr className="border-b text-slate-500 font-medium">
+                                    <th className="px-6 py-3">{t('posts.details.readers.name')}</th>
+                                    <th className="px-6 py-3">{t('posts.details.readers.unit')}</th>
+                                    <th className="px-6 py-3">{t('posts.details.readers.date')}</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {post.readers?.length > 0 ? (
+                                    post.readers.map((reader, index) => (
+                                        <tr key={index} className="hover:bg-slate-50/50 transition-colors">
+                                            <td className="px-6 py-3">
+                                                <div className="font-medium text-slate-900">{reader.name}</div>
+                                                <div className="text-xs text-slate-500">{reader.email}</div>
+                                            </td>
+                                            <td className="px-6 py-3 text-slate-600">
+                                                {reader.quadra ? `Q${reader.quadra} L${reader.lote} ${reader.casa ? `C${reader.casa}` : ''}` : '-'}
+                                            </td>
+                                            <td className="px-6 py-3 text-slate-500">
+                                                {formatDateTime(reader.last_read_at)}
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="3" className="px-6 py-8 text-center text-slate-400 italic">
+                                            {t('posts.details.readers.no_readers')}
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

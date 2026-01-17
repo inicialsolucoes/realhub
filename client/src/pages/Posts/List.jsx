@@ -4,6 +4,7 @@ import { Plus, Search, Trash2, Edit, Bell, Building2, ChevronLeft, ChevronRight,
 import api from '../../lib/api';
 import { useTranslation } from '../../context/TranslationContext';
 import { useAuth } from '../../context/AuthContext';
+import { formatDate } from '../../utils/date';
 
 export default function PostsList() {
     const [posts, setPosts] = useState([]);
@@ -157,7 +158,7 @@ export default function PostsList() {
                                         )}
                                     </td>
                                     <td className="p-4 text-sm text-slate-600">
-                                        {new Date(post.created_at).toLocaleDateString()}
+                                        {formatDate(post.created_at)}
                                     </td>
                                     <td className="p-4 text-right space-x-2">
                                         {isAdmin && (

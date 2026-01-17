@@ -275,7 +275,14 @@
         },
         "details": {
             "title": "Detalhes",
-            "download_file": "Baixar Arquivo"
+            "download_file": "Baixar Arquivo",
+            "readers": {
+                "title": "Leituras",
+                "name": "Nome",
+                "unit": "Unidade",
+                "date": "Data/Hora",
+                "no_readers": "Nenhuma leitura registrada ainda."
+            }
         }
     }
 }

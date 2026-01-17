@@ -2,12 +2,16 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+
+dotenv.config({ path: path.join(__dirname, '.env') });
+if (process.env.TZ) {
+    process.env.TZ = process.env.TZ;
+}
+
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const unitRoutes = require('./routes/units');
 const paymentRoutes = require('./routes/payments');
-
-dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3001;

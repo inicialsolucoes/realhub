@@ -3,6 +3,7 @@ import api from '../../lib/api';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../context/TranslationContext';
+import { formatDate } from '../../utils/date';
 import { Plus, Search, TrendingUp, TrendingDown, ChevronLeft, ChevronRight, Building2, Edit, Trash2, Eye, Clock } from 'lucide-react';
 
 export default function PaymentsList() {
@@ -179,7 +180,7 @@ export default function PaymentsList() {
                                         )}
                                     </td>
                                     <td className="p-4 text-slate-500 text-sm">
-                                        {new Date(payment.date).toLocaleDateString()}
+                                        {formatDate(payment.date)}
                                     </td>
                                     <td className="p-4 text-right space-x-2">
                                         {(user.role === 'admin' || user.id === payment.user_id) && (

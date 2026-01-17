@@ -3,6 +3,7 @@ import api from '../../lib/api';
 import { Link } from 'react-router-dom';
 import { Search, Filter, ChevronLeft, ChevronRight, Eye, Clock, User as UserIcon, Activity } from 'lucide-react';
 import { useTranslation } from '../../context/TranslationContext';
+import { formatDateTime } from '../../utils/date';
 
 export default function LogsList() {
     const { t } = useTranslation();
@@ -128,7 +129,7 @@ export default function LogsList() {
                                         <td className="p-4">
                                             <div className="flex items-center gap-2 text-slate-500 text-sm">
                                                 <Clock className="w-3.5 h-3.5" />
-                                                {new Date(log.created_at).toLocaleString('pt-BR')}
+                                                {formatDateTime(log.created_at)}
                                             </div>
                                         </td>
                                         <td className="p-4 text-right">

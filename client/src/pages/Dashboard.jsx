@@ -3,6 +3,7 @@ import { Building2, Wallet, Users, ArrowUpRight, ArrowDownRight, Clock, Plus, Ed
 import api from '../lib/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useTranslation } from '../context/TranslationContext';
+import { formatDate, formatDateTime } from '../utils/date';
 
 export default function Dashboard() {
     const [statsData, setStatsData] = useState({ units: 0, residents: 0, income: 0, expense: 0, history: [] });
@@ -142,7 +143,7 @@ export default function Dashboard() {
                                     payments.map((payment, idx) => (
                                         <tr key={idx} className="text-sm">
                                             <td className="py-3 text-slate-500 whitespace-nowrap">
-                                                {new Date(payment.date).toLocaleDateString()}
+                                                {formatDate(payment.date)}
                                             </td>
                                             <td className="py-3 text-slate-700 font-medium truncate max-w-[120px]">
                                                 {payment.cost_center_name || '-'}
@@ -208,7 +209,7 @@ export default function Dashboard() {
                                                 {activity.entity_type && <span className="text-slate-500"> {t(`entities.${activity.entity_type}`)}</span>}
                                             </p>
                                             <p className="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider">
-                                                {new Date(activity.created_at).toLocaleString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                                {formatDateTime(activity.created_at)}
                                             </p>
                                         </div>
                                     </div>

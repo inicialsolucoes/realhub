@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import api from '../../lib/api';
 import { ArrowLeft, Clock, User as UserIcon, Activity, Globe, Info } from 'lucide-react';
 import { useTranslation } from '../../context/TranslationContext';
+import { formatDateTime } from '../../utils/date';
 
 export default function LogDetails() {
     const { id } = useParams();
@@ -133,9 +134,9 @@ export default function LogDetails() {
                             <span className="text-slate-500 text-sm flex items-center gap-2"><UserIcon className="w-4 h-4" /> {t('logs.table.user')}</span>
                             <span className="font-semibold text-slate-800">{log.user_name || t('common.system')}</span>
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b border-slate-50">
+                         <div className="flex justify-between items-center py-2 border-b border-slate-50">
                             <span className="text-slate-500 text-sm flex items-center gap-2"><Clock className="w-4 h-4" /> {t('logs.table.date')}</span>
-                            <span className="font-medium text-slate-700">{new Date(log.created_at).toLocaleString('pt-BR')}</span>
+                            <span className="font-medium text-slate-700">{formatDateTime(log.created_at)}</span>
                         </div>
                         <div className="flex justify-between items-center py-2 border-b border-slate-50">
                             <span className="text-slate-500 text-sm flex items-center gap-2"><Globe className="w-4 h-4" /> IP Address</span>

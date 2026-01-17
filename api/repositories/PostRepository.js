@@ -93,6 +93,26 @@ class PostRepository {
     async delete(id) {
         await db.query('DELETE FROM posts WHERE id = ?', [id]);
     }
+
+    async recordRead(postId, userId) {
+        await db.query(
+            'INSERT INTO post_reads (post_id, user_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE last_read_at = CURRENT_TIMESTAMP',
+            [postId, userId]
+        );
+    }
+
+    async getReaders(postId) {
+        const [rows] = await db.query(
+            `SELECT u.name, u.email, pr.last_read_at, u.role, un.quadra, un.lote, un.casa 
+             FROM post_reads pr 
+             JOIN users u ON pr.user_id = u.id 
+             LEFT JOIN units un ON u.unit_id = un.id
+             WHERE pr.post_id = ? 
+             ORDER BY pr.last_read_at DESC`,
+            [postId]
+        );
+        return rows;
+    }
 }
 
 module.exports = new PostRepository();
