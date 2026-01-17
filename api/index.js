@@ -4,8 +4,8 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
-if (process.env.TZ) {
-    process.env.TZ = process.env.TZ;
+if (process.env.TIMEZONE) {
+    process.env.TZ = process.env.TIMEZONE;
 }
 
 const authRoutes = require('./routes/auth');
