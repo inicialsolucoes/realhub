@@ -136,7 +136,9 @@ export default function UsersList() {
                             {!loading && users.map(user => (
                                 <tr key={user.id} className="hover:bg-slate-50 transition-colors">
                                     <td className="p-4 text-slate-600 text-sm text-nowrap">
-                                        {user.name}
+                                        <Link to={`/users/${user.id}/edit`} className="font-medium text-slate-700 hover:text-primary transition-colors flex items-center gap-2">
+                                            {user.name}
+                                        </Link>
                                     </td>
                                     <td className="p-4">
                                         <div className="flex flex-col gap-1">

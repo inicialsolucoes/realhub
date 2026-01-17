@@ -143,7 +143,9 @@ export default function PaymentsList() {
                                     className="hover:bg-slate-50 transition-colors"
                                 >
                                     <td className="p-4 text-slate-600 text-sm text-nowrap">
-                                        {payment.cost_center_name || '-'}
+                                        <Link to={`/payments/${payment.id}`} className="font-medium text-slate-700 hover:text-primary transition-colors">
+                                            {payment.cost_center_name || '-'}
+                                        </Link>
                                     </td>
                                     <td className="p-4">
                                         {payment.type === 'income' ? (
@@ -180,12 +182,6 @@ export default function PaymentsList() {
                                         {new Date(payment.date).toLocaleDateString()}
                                     </td>
                                     <td className="p-4 text-right space-x-2">
-                                        <button
-                                            onClick={() => navigate(`/payments/${payment.id}`)}
-                                            className="p-2 text-primary hover:bg-slate-100 rounded-lg transition-colors"
-                                        >
-                                            <Eye className="w-5 h-5" />
-                                        </button>
                                         {(user.role === 'admin' || user.id === payment.user_id) && (
                                             <>
                                                 <button
@@ -202,6 +198,12 @@ export default function PaymentsList() {
                                                 </button>
                                             </>
                                         )}
+                                        <button
+                                            onClick={() => navigate(`/payments/${payment.id}`)}
+                                            className="p-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors inline-block"
+                                        >
+                                            <ChevronRight className="w-4 h-4" />
+                                        </button>
                                     </td>
                                 </tr>
                             ))}

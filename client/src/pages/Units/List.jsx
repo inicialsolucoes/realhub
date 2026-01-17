@@ -14,6 +14,7 @@ export default function UnitsList() {
     const { user } = useAuth();
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const isAdmin = user?.role === 'admin';
 
     const fetchUnits = useCallback(async () => {
         setLoading(true);
@@ -130,7 +131,9 @@ export default function UnitsList() {
                                     className="hover:bg-slate-50 transition-colors"
                                 >
                                     <td className="p-4 text-slate-600 text-sm text-nowrap">
-                                        {t('units.table.quadra')} {unit.quadra} • {t('units.table.lote')} {unit.lote} • {t('units.table.casa')} {unit.casa}
+                                        <Link to={`/units/${unit.id}`} className="font-medium text-slate-700 hover:text-primary transition-colors">
+                                            {t('units.table.quadra')} {unit.quadra} • {t('units.table.lote')} {unit.lote} • {t('units.table.casa')} {unit.casa}
+                                        </Link>
                                     </td>
                                     <td className="p-4 text-slate-600 text-sm">
                                         {unit.interfone || '-'}
@@ -141,13 +144,7 @@ export default function UnitsList() {
                                         </span>
                                     </td>
                                     <td className="p-4 text-right space-x-2">
-                                        <button
-                                            onClick={() => navigate(`/units/${unit.id}`)}
-                                            className="p-2 text-primary hover:bg-slate-100 rounded-lg transition-colors"
-                                        >
-                                            <Eye className="w-5 h-5" />
-                                        </button>
-                                        {user.role === 'admin' && (
+                                        {isAdmin && (
                                             <>
                                                 <button
                                                     onClick={() => navigate(`/units/${unit.id}/edit`)}
@@ -162,6 +159,11 @@ export default function UnitsList() {
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
                                             </>
+                                        )}
+                                        {!isAdmin && (
+                                            <Link to={`/units/${unit.id}`} className="p-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors inline-block">
+                                                 <ChevronRight className="w-4 h-4" />
+                                            </Link>
                                         )}
                                     </td>
                                 </tr>

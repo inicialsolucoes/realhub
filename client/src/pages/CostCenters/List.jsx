@@ -98,7 +98,9 @@ export default function CostCentersList() {
                                     className="hover:bg-slate-50 transition-colors"
                                 >
                                     <td className="p-4 text-slate-600 text-sm text-nowrap">
-                                        {cc.name}
+                                        <Link to={`/cost-centers/${cc.id}/edit`} className="font-medium text-slate-700 hover:text-primary transition-colors flex items-center gap-2">
+                                            {cc.name}
+                                        </Link>
                                     </td>
                                     <td className="p-4">
                                         {cc.type === 'income' ? (

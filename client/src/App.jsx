@@ -18,6 +18,9 @@ import LogsList from './pages/Logs/List';
 import LogDetails from './pages/Logs/Details';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import PostsList from './pages/Posts/List';
+import PostForm from './pages/Posts/Form';
+import PostDetails from './pages/Posts/Details';
 import { Loader2 } from 'lucide-react';
 
 function PrivateRoute({ children }) {
@@ -79,6 +82,12 @@ export default function App() {
         {/* Activity Logs Routes */}
         <Route path="logs" element={<LogsList />} />
         <Route path="logs/:id" element={<LogDetails />} />
+
+        {/* Posts Routes */}
+        <Route path="posts" element={<PostsList />} />
+        <Route path="posts/new" element={<PostForm />} />
+        <Route path="posts/:id" element={<PostDetails />} />
+        <Route path="posts/:id/edit" element={<PostForm />} />
       </Route>
     </Routes>
   );

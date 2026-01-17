@@ -28,6 +28,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/cost-centers', require('./routes/costCenters'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/activity-logs', require('./routes/activityLogs'));
+app.use('/api/posts', require('./routes/posts'));
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

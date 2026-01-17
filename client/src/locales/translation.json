@@ -223,7 +223,8 @@
         "user": "morador",
         "payment": "pagamento",
         "unit": "unidade",
-        "cost_center": "centro de custo"
+        "cost_center": "centro de custo",
+        "post": "publicação"
     },
     "logs": {
         "filters": {
@@ -247,6 +248,34 @@
             "old_state": "Valor Antigo",
             "new_state": "Valor Novo",
             "current_data": "Dados Registrados"
+        }
+    },
+    "posts": {
+        "title": "Publicações",
+        "new": "Nova Publicação",
+        "form": {
+            "title": "Título",
+            "category": "Categoria",
+            "content": "Conteúdo",
+            "file": "Arquivo (Opcional)",
+            "unit": "Unidade (Opcional)",
+            "edit_title": "Editar Publicação",
+            "new_title": "Criar Publicação",
+             "categories": {
+                "notice": "Aviso",
+                "info": "Informação"
+            }
+        },
+        "table": {
+            "title": "Título",
+            "category": "Categoria",
+            "date": "Data",
+            "unit": "Unidade",
+            "no_results": "Nenhuma publicação encontrada."
+        },
+        "details": {
+            "title": "Detalhes",
+            "download_file": "Baixar Arquivo"
         }
     }
 }

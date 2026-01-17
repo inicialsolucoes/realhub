@@ -106,7 +106,9 @@ export default function LogsList() {
                                 logs.map(log => (
                                     <tr key={log.id} className="hover:bg-slate-50 transition-colors">
                                         <td className="p-4 text-slate-600 text-sm text-nowrap">
-                                            {log.user_name || t('common.system')}
+                                            <Link to={`/logs/${log.id}`} className="font-medium text-slate-700 hover:text-primary transition-colors">
+                                                {log.user_name || t('common.system')}
+                                            </Link>
                                         </td>
                                         <td className="p-4">
                                             <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${log.action === 'CREATE' ? 'bg-emerald-50 text-emerald-600' :
@@ -130,8 +132,8 @@ export default function LogsList() {
                                             </div>
                                         </td>
                                         <td className="p-4 text-right">
-                                            <Link to={`/logs/${log.id}`} className="p-2 text-primary hover:bg-slate-100 rounded-lg inline-block transition-colors">
-                                                <Eye className="w-5 h-5" />
+                                            <Link to={`/logs/${log.id}`} className="p-2 text-slate-600 hover:bg-slate-50 rounded-lg inline-block transition-colors">
+                                                <ChevronRight className="w-4 h-4" />
                                             </Link>
                                         </td>
                                     </tr>
