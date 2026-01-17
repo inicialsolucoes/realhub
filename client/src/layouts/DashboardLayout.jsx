@@ -1,6 +1,6 @@
 import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Users, Building2, Wallet, LogOut, Menu, X, Folder, ClipboardList, Bell } from 'lucide-react';
+import { LayoutDashboard, Users, Building2, Wallet, LogOut, Menu, X, Folder, ClipboardList, Bell, BarChart, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { clsx } from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,6 +12,11 @@ export default function DashboardLayout() {
     const location = useLocation();
     const navigate = useNavigate();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [openMenus, setOpenMenus] = useState({});
+
+    const toggleMenu = (label) => {
+        setOpenMenus(prev => ({ ...prev, [label]: !prev[label] }));
+    };
 
     // Define navigation based on Role
     const navItems = [
@@ -21,6 +26,15 @@ export default function DashboardLayout() {
         { label: t('app.payments'), icon: Wallet, path: '/payments', roles: ['admin', 'user'] },
         { label: t('posts.title'), icon: Bell, path: '/posts', roles: ['admin', 'user'] },
         { label: t('app.cost_centers') || 'Centros de Custos', icon: Folder, path: '/cost-centers', roles: ['admin'] },
+        {
+            label: t('reports.title') || 'Relatórios',
+            icon: BarChart,
+            path: '/reports',
+            roles: ['admin'],
+            subItems: [
+                { label: t('reports.revenue.title') || 'Relatório de Arrecadação', path: '/reports/revenue' }
+            ]
+        },
         { label: t('app.logs') || 'Logs de Atividade', icon: ClipboardList, path: '/logs', roles: ['admin'] },
     ];
 
@@ -67,6 +81,54 @@ export default function DashboardLayout() {
                     {filteredNav.map((item) => {
                         const Icon = item.icon;
                         const isActive = location.pathname.startsWith(item.path);
+                        const hasSubItems = item.subItems && item.subItems.length > 0;
+                        const isOpen = openMenus[item.label] || isActive;
+
+                        if (hasSubItems) {
+                            return (
+                                <div key={item.path} className="space-y-1">
+                                    <button
+                                        onClick={() => toggleMenu(item.label)}
+                                        className={clsx(
+                                            "w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group",
+                                            isActive ? "text-white bg-white/5" : "text-slate-400 hover:text-white hover:bg-white/5"
+                                        )}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <Icon className="w-5 h-5" />
+                                            <span className="font-medium">{item.label}</span>
+                                        </div>
+                                        <ChevronDown className={clsx("w-4 h-4 transition-transform", isOpen && "rotate-180")} />
+                                    </button>
+                                    
+                                    <AnimatePresence>
+                                        {isOpen && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: "auto", opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                className="overflow-hidden pl-11 space-y-1"
+                                            >
+                                                {item.subItems.map(subItem => (
+                                                    <Link
+                                                        key={subItem.path}
+                                                        to={subItem.path}
+                                                        onClick={() => setIsMobileMenuOpen(false)}
+                                                        className={clsx(
+                                                            "block py-2 text-sm transition-colors",
+                                                            location.pathname === subItem.path ? "text-primary-light font-bold" : "text-slate-400 hover:text-white"
+                                                        )}
+                                                    >
+                                                        {subItem.label}
+                                                    </Link>
+                                                ))}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            );
+                        }
+
                         return (
                             <Link
                                 key={item.path}

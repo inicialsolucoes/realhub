@@ -21,6 +21,7 @@ import ResetPassword from './pages/ResetPassword';
 import PostsList from './pages/Posts/List';
 import PostForm from './pages/Posts/Form';
 import PostDetails from './pages/Posts/Details';
+import RevenueReport from './pages/Reports/Revenue';
 import { Loader2 } from 'lucide-react';
 
 function PrivateRoute({ children }) {
@@ -88,6 +89,9 @@ export default function App() {
         <Route path="posts/new" element={<PostForm />} />
         <Route path="posts/:id" element={<PostDetails />} />
         <Route path="posts/:id/edit" element={<PostForm />} />
+
+        {/* Reports Routes */}
+        <Route path="reports/revenue" element={<RevenueReport />} />
       </Route>
     </Routes>
   );

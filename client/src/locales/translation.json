@@ -284,5 +284,17 @@
                 "no_readers": "Nenhuma leitura registrada ainda."
             }
         }
+    },
+    "reports": {
+        "title": "Relatórios",
+        "revenue": {
+            "title": "Relatório de Arrecadação",
+            "pending_count": "Qtd Pendente",
+            "pending_total": "Total Pendente",
+            "paid_count": "Qtd Pago",
+            "paid_total": "Total Pago",
+            "balance": "Saldo",
+            "total_arrecadado": "Total Arrecadado"
+        }
     }
 }

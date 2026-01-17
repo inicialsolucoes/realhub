@@ -4,6 +4,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Edit, Trash2, FileText, Download, Building2, Mail, Phone, TrendingUp, TrendingDown, Clock, Upload, CheckCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from '../../context/TranslationContext';
+import { formatDate } from '../../utils/date';
 
 export default function PaymentDetails() {
     const { id } = useParams();
@@ -85,7 +86,7 @@ export default function PaymentDetails() {
             <div className="flex justify-between items-start">
                 <div>
                     <h1 className="text-3xl font-bold text-slate-800">{t('payments.details.title')}</h1>
-                    <p className="text-slate-500">{new Date(payment.date).toLocaleDateString()}</p>
+                    <p className="text-slate-500">{formatDate(payment.date)}</p>
                 </div>
                 <div className="flex gap-3">
                     {canEdit && (
