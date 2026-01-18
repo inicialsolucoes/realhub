@@ -158,10 +158,14 @@ export default function RevenueReport() {
                                 data.map((item) => (
                                     <tr key={item.id} className="hover:bg-slate-50 transition-colors">
                                         <td className="p-4 text-nowrap">
-                                            <div className="flex items-center gap-2 text-slate-700 bg-slate-100 px-2 py-1 rounded text-sm w-fit font-medium">
-                                                <Building2 className="w-3 h-3" />
-                                                <span>Q{item.quadra} L{item.lote} {item.casa ? `C${item.casa}` : ''}</span>
-                                            </div>
+                                            {item.quadra ? (
+                                                <div className="flex items-center gap-2 text-slate-700 bg-slate-100 px-2 py-1 rounded text-sm w-fit">
+                                                    <Building2 className="w-3 h-3" />
+                                                    <span>Q{item.quadra} L{item.lote} {item.casa ? `C${item.casa}` : ''}</span>
+                                                </div>
+                                            ) : (
+                                                <span className="text-xs text-slate-400 italic">{t('payments.table.no_unit')}</span>
+                                            )}
                                         </td>
                                         <td className="p-4 text-center text-nowrap text-sm text-slate-500">
                                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${item.qtd_pendente > 0 ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-400'}`}>

@@ -4,20 +4,20 @@ class ReportRepository {
     async getRevenueReport(filters = {}) {
         const { month, year } = filters;
         
-        let joinConditions = [];
+        let whereConditions = [];
         let params = [];
 
         if (month && month !== 'all' && month !== '') {
-            joinConditions.push('MONTH(p.date) = ?');
+            whereConditions.push('MONTH(p.date) = ?');
             params.push(parseInt(month));
         }
         if (year && year !== 'all' && year !== '') {
-            joinConditions.push('YEAR(p.date) = ?');
+            whereConditions.push('YEAR(p.date) = ?');
             params.push(parseInt(year));
         }
 
-        const joinClause = joinConditions.length > 0 
-            ? ` AND ${joinConditions.join(' AND ')}` 
+        const whereClause = whereConditions.length > 0 
+            ? ` AND ${whereConditions.join(' AND ')}`
             : '';
 
         const query = `
@@ -30,8 +30,9 @@ class ReportRepository {
                 IFNULL(SUM(CASE WHEN p.type = 'pending' THEN p.amount ELSE 0 END), 0) as total_pendente,
                 COUNT(CASE WHEN p.type = 'income' THEN 1 END) as qtd_pago,
                 IFNULL(SUM(CASE WHEN p.type = 'income' THEN p.amount ELSE 0 END), 0) as total_pago
-            FROM units u
-            LEFT JOIN payments p ON u.id = p.unit_id ${joinClause}
+            FROM payments p
+            LEFT JOIN units u ON u.id = p.unit_id 
+            WHERE p.type <> 'expense' ${whereClause}
             GROUP BY u.id
             ORDER BY u.quadra ASC, u.lote ASC, u.casa ASC
         `;
