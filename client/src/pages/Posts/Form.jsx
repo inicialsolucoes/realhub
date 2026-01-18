@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Save, Upload, X } from 'lucide-react';
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
+import ImageResize from 'quill-image-resize-module-react';
 import 'react-quill/dist/quill.snow.css';
+
+// Register Quill modules
+Quill.register('modules/imageResize', ImageResize);
 import api from '../../lib/api';
 import { useTranslation } from '../../context/TranslationContext';
 
@@ -101,10 +105,15 @@ export default function PostForm() {
         toolbar: [
             [{ 'header': [1, 2, false] }],
             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-            [{'list': 'ordered'}, {'list': 'bullet'}],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
             ['link', 'image'],
             ['clean']
         ],
+        imageResize: {
+            parchment: Quill.import('parchment'),
+            modules: ['Resize', 'DisplaySize']
+        }
     };
 
     return (
