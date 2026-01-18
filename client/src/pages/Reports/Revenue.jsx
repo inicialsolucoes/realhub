@@ -63,6 +63,51 @@ export default function RevenueReport() {
                 <h1 className="text-2xl font-bold text-slate-800">{t('reports.revenue.title')}</h1>
             </div>
 
+            <div className="card p-4">
+                <form onSubmit={handleFilter} className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                    <div>
+                        <label className="text-xs font-semibold text-slate-500 uppercase mb-1 block">Mês</label>
+                        <select
+                            className="input w-full text-sm"
+                            value={filters.month}
+                            onChange={(e) => setFilters({ ...filters, month: e.target.value })}
+                        >
+                            <option value="all">Todos os meses</option>
+                            {months.map(m => (
+                                <option key={m.value} value={m.value}>{m.label}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <label className="text-xs font-semibold text-slate-500 uppercase mb-1 block">Ano</label>
+                        <select
+                            className="input w-full text-sm"
+                            value={filters.year}
+                            onChange={(e) => setFilters({ ...filters, year: e.target.value })}
+                        >
+                            <option value="all">Todos os anos</option>
+                            {years.map(y => (
+                                <option key={y} value={y}>{y}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" className="btn btn-primary flex items-center justify-center gap-2 h-[38px] w-full md:w-auto inline-flex">
+                            <Search className="w-4 h-4" /> {t('payments.filters.filter_button')}
+                        </button>
+                        {(filters.month !== 'all' || filters.year !== 'all') && (
+                            <button 
+                                type="button" 
+                                onClick={() => setFilters({ month: 'all', year: 'all' })}
+                                className="btn btn-ghost text-slate-500 flex items-center gap-2 h-[38px] mt-4 !pl-0 md:!pl-3 inline-flex"
+                            >
+                                <X className="w-4 h-4" /> Limpar
+                            </button>
+                        )}
+                    </div>
+                </form>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="card border-l-4 border-amber-500 flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
@@ -89,60 +134,17 @@ export default function RevenueReport() {
                 </div>
             </div>
 
-            <div className="card p-4">
-                <form onSubmit={handleFilter} className="flex flex-wrap items-end gap-4">
-                    <div className="w-40">
-                        <label className="text-xs font-semibold text-slate-500 uppercase mb-1 block">Mês</label>
-                        <select
-                            className="input w-full text-sm"
-                            value={filters.month}
-                            onChange={(e) => setFilters({ ...filters, month: e.target.value })}
-                        >
-                            <option value="all">Todos os meses</option>
-                            {months.map(m => (
-                                <option key={m.value} value={m.value}>{m.label}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="w-40">
-                        <label className="text-xs font-semibold text-slate-500 uppercase mb-1 block">Ano</label>
-                        <select
-                            className="input w-full text-sm"
-                            value={filters.year}
-                            onChange={(e) => setFilters({ ...filters, year: e.target.value })}
-                        >
-                            <option value="all">Todos os anos</option>
-                            {years.map(y => (
-                                <option key={y} value={y}>{y}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <button type="submit" className="btn btn-primary flex items-center gap-2 h-[38px]">
-                        <Search className="w-4 h-4" /> {t('payments.filters.filter_button')}
-                    </button>
-                    {(filters.month !== 'all' || filters.year !== 'all') && (
-                        <button 
-                            type="button" 
-                            onClick={() => setFilters({ month: 'all', year: 'all' })}
-                            className="btn btn-ghost text-slate-500 flex items-center gap-2 h-[38px]"
-                        >
-                            <X className="w-4 h-4" /> Limpar
-                        </button>
-                    )}
-                </form>
-            </div>
-
             <div className="card overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-100 text-xs text-slate-500 uppercase">
                                 <th className="p-4 font-semibold">Unidade</th>
-                                <th className="p-4 font-semibold text-center">{t('reports.revenue.pending_count')}</th>
-                                <th className="p-4 font-semibold text-right">{t('reports.revenue.pending_total')}</th>
-                                <th className="p-4 font-semibold text-center">{t('reports.revenue.paid_count')}</th>
-                                <th className="p-4 font-semibold text-right">{t('reports.revenue.paid_total')}</th>
-                                <th className="p-4 font-semibold text-right">{t('reports.revenue.balance')}</th>
+                                <th className="p-4 font-semibold text-center text-nowrap w-32">{t('reports.revenue.pending_count')}</th>
+                                <th className="p-4 font-semibold text-right text-nowrap w-32">{t('reports.revenue.pending_total')}</th>
+                                <th className="p-4 font-semibold text-center text-nowrap w-32">{t('reports.revenue.paid_count')}</th>
+                                <th className="p-4 font-semibold text-right text-nowrap w-32">{t('reports.revenue.paid_total')}</th>
+                                <th className="p-4 font-semibold text-right text-nowrap w-32">{t('reports.revenue.balance')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -155,29 +157,29 @@ export default function RevenueReport() {
                             ) : data.length > 0 ? (
                                 data.map((item) => (
                                     <tr key={item.id} className="hover:bg-slate-50 transition-colors">
-                                        <td className="p-4">
+                                        <td className="p-4 text-nowrap">
                                             <div className="flex items-center gap-2 text-slate-700 bg-slate-100 px-2 py-1 rounded text-sm w-fit font-medium">
                                                 <Building2 className="w-3 h-3" />
                                                 <span>Q{item.quadra} L{item.lote} {item.casa ? `C${item.casa}` : ''}</span>
                                             </div>
                                         </td>
-                                        <td className="p-4 text-center text-sm text-slate-500">
+                                        <td className="p-4 text-center text-nowrap text-sm text-slate-500">
                                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${item.qtd_pendente > 0 ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-400'}`}>
                                                 {item.qtd_pendente}
                                             </span>
                                         </td>
-                                        <td className={`p-4 text-right text-sm font-bold text-amber-600`}>
+                                        <td className={`p-4 text-right text-nowrap text-sm font-bold text-amber-600`}>
                                             {formatCurrency(item.total_pendente)}
                                         </td>
-                                        <td className="p-4 text-center text-sm text-slate-500">
+                                        <td className="p-4 text-center text-nowrap text-sm text-slate-500">
                                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${item.qtd_pago > 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>
                                                 {item.qtd_pago}
                                             </span>
                                         </td>
-                                        <td className={`p-4 text-right text-sm font-bold text-emerald-600`}>
+                                        <td className={`p-4 text-right text-nowrap text-sm font-bold text-emerald-600`}>
                                             {formatCurrency(item.total_pago)}
                                         </td>
-                                        <td className={`p-4 text-right text-sm font-bold ${parseFloat(item.total_pago) - parseFloat(item.total_pendente) < 0 ? 'text-red-600' : 'text-emerald-700'}`}>
+                                        <td className={`p-4 text-right text-nowrap text-sm font-bold ${parseFloat(item.total_pago) - parseFloat(item.total_pendente) < 0 ? 'text-red-600' : 'text-emerald-700'}`}>
                                             {formatCurrency(parseFloat(item.total_pago) - parseFloat(item.total_pendente))}
                                         </td>
                                     </tr>

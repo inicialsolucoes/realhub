@@ -288,9 +288,10 @@
     "reports": {
         "title": "Relatórios",
         "revenue": {
+            "menu": "Arrecadação",
             "title": "Relatório de Arrecadação",
-            "pending_count": "Qtd Pendente",
-            "pending_total": "Total Pendente",
+            "pending_count": "Qtd Pend",
+            "pending_total": "Total Pend",
             "paid_count": "Qtd Pago",
             "paid_total": "Total Pago",
             "balance": "Saldo",

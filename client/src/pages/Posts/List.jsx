@@ -108,7 +108,7 @@ export default function PostsList() {
                         </select>
                     </div>
                     <div>
-                        <button type="submit" className="btn btn-outline flex items-center justify-center gap-2 h-[38px]">
+                        <button type="submit" className="btn btn-outline flex items-center justify-center gap-2 h-[38px] w-full md:w-auto">
                             <Search className="w-4 h-4" /> {t('payments.filters.filter_button')}
                         </button>
                     </div>
