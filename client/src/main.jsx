@@ -4,15 +4,18 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext'
 import { TranslationProvider } from './context/TranslationContext'
+import { NotificationProvider } from './context/NotificationContext'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <TranslationProvider>
-          <App />
-        </TranslationProvider>
+        <NotificationProvider>
+          <TranslationProvider>
+            <App />
+          </TranslationProvider>
+        </NotificationProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,

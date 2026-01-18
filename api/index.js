@@ -34,6 +34,7 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/activity-logs', require('./routes/activityLogs'));
 app.use('/api/posts', require('./routes/posts'));
 app.use('/api/reports', require('./routes/reports'));
+app.use('/api/notifications', require('./routes/notifications'));
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

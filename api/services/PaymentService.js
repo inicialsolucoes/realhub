@@ -2,6 +2,7 @@ const PaymentRepository = require('../repositories/PaymentRepository');
 const CostCenterRepository = require('../repositories/CostCenterRepository');
 const UnitRepository = require('../repositories/UnitRepository');
 const { logAction } = require('../utils/logger');
+const NotificationService = require('./NotificationService');
 
 class PaymentService {
     async findAll(options, userId, userRole, userUnitId) {
@@ -89,6 +90,11 @@ class PaymentService {
                  
                  const logData = { date, type, amount, proof: proof ? '(file)' : null, description, unit_id: unit.id, cost_center_id };
                  await logAction(userId, 'CREATE', 'payment', id, logData, ip);
+
+                 // Notify unit residents
+                 NotificationService.notifyNewPayment({ id, type, amount, description, unit_id: unit.id }, userId).catch(err => {
+                     console.error(`Failed to send payment notifications for unit ${unit.id}:`, err);
+                 });
              }
 
              return {
@@ -106,6 +112,11 @@ class PaymentService {
 
         const logData = { date, type, amount, proof: proof ? '(file)' : null, description, unit_id, cost_center_id };
         await logAction(userId, 'CREATE', 'payment', id, logData, ip);
+
+        // Notify unit residents
+        NotificationService.notifyNewPayment({ id, type, amount, description, unit_id }, userId).catch(err => {
+            console.error('Failed to send payment notifications:', err);
+        });
 
         return { message: "Payment created", id };
     }

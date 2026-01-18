@@ -1,5 +1,6 @@
 const PostRepository = require('../repositories/PostRepository');
 const { logAction } = require('../utils/logger');
+const NotificationService = require('./NotificationService');
 
 class PostService {
     async findAll(options, userId, userRole, userUnitId) {
@@ -55,6 +56,11 @@ class PostService {
         
         const logData = { category, title, unit_id };
         await logAction(requesterId, 'CREATE', 'post', id, logData, ip);
+        
+        // Notify residents
+        NotificationService.notifyNewPost({ id, title, unit_id }, requesterId).catch(err => {
+            console.error('Failed to send post notifications:', err);
+        });
         
         return id;
     }
