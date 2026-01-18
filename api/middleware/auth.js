@@ -17,6 +17,7 @@ const verifyToken = (req, res, next) => {
         req.userId = decoded.id;
         req.userRole = decoded.role;
         req.unitId = decoded.unit_id; // Store unit_id for permission checks
+        req.pushEndpoint = req.headers['x-push-endpoint']; // Identify current device for notification exclusion
         next();
     });
 };

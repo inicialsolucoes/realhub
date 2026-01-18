@@ -22,7 +22,7 @@ exports.findOne = async (req, res) => {
 
 exports.create = async (req, res) => {
     try {
-        const id = await PostService.create(req.body, req.userId, req.userRole, req.ip);
+        const id = await PostService.create(req.body, req.userId, req.userRole, req.ip, req.pushEndpoint);
         res.status(201).send({ message: "Post created successfully", id });
     } catch (error) {
         if (error.message === "Unauthorized") return res.status(403).send({ message: error.message });

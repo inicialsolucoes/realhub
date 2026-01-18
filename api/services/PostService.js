@@ -46,7 +46,7 @@ class PostService {
         return post;
     }
 
-    async create(data, requesterId, userRole, ip) {
+    async create(data, requesterId, userRole, ip, reqPushEndpoint = null) {
         if (userRole !== 'admin') {
             throw new Error("Unauthorized");
         }
@@ -58,7 +58,7 @@ class PostService {
         await logAction(requesterId, 'CREATE', 'post', id, logData, ip);
         
         // Notify residents
-        NotificationService.notifyNewPost({ id, title, unit_id }, requesterId).catch(err => {
+        NotificationService.notifyNewPost({ id, title, unit_id }, requesterId, reqPushEndpoint).catch(err => {
             console.error('Failed to send post notifications:', err);
         });
         

@@ -9,6 +9,12 @@ api.interceptors.request.use((config) => {
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
+
+    const pushEndpoint = localStorage.getItem('pushEndpoint');
+    if (pushEndpoint) {
+        config.headers['X-Push-Endpoint'] = pushEndpoint;
+    }
+    
     return config;
 });
 

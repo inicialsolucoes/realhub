@@ -37,6 +37,7 @@ export function NotificationProvider({ children }) {
             if (existingSubscription) {
                 const subJSON = existingSubscription.toJSON();
                 setSubscription(subJSON);
+                localStorage.setItem('pushEndpoint', subJSON.endpoint);
                 // Even if exists, update backend to ensure it's linked to current user
                 await api.post('/notifications/subscribe', subJSON);
                 return;
@@ -49,6 +50,7 @@ export function NotificationProvider({ children }) {
 
             const subJSON = sub.toJSON();
             setSubscription(subJSON);
+            localStorage.setItem('pushEndpoint', subJSON.endpoint);
             await api.post('/notifications/subscribe', subJSON);
             console.log('Successfully subscribed to push notifications');
         } catch (error) {

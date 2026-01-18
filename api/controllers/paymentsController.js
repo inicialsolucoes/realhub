@@ -22,7 +22,7 @@ exports.findOne = async (req, res) => {
 
 exports.create = async (req, res) => {
     try {
-        const result = await PaymentService.create(req.body, req.userId, req.userRole, req.unitId, req.ip);
+        const result = await PaymentService.create(req.body, req.userId, req.userRole, req.unitId, req.ip, req.pushEndpoint);
         if (result.isBulk) {
             res.status(201).send(result);
         } else {
@@ -79,7 +79,7 @@ exports.submitProof = async (req, res) => {
     }
 
     try {
-        await PaymentService.submitProof(req.params.id, proof, req.userId, req.userRole, req.unitId, req.ip);
+        await PaymentService.submitProof(req.params.id, proof, req.userId, req.userRole, req.unitId, req.ip, req.pushEndpoint);
         res.status(200).send({ message: "Proof submitted and payment marked as income" });
     } catch (error) {
         if (error.message === "Payment not found") return res.status(404).send({ message: error.message });

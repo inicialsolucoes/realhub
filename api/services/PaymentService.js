@@ -43,7 +43,7 @@ class PaymentService {
         return payment;
     }
 
-    async create(data, userId, userRole, userUnitId, ip) {
+    async create(data, userId, userRole, userUnitId, ip, reqPushEndpoint = null) {
         let { date, type, amount, proof, description, unit_id, cost_center_id } = data;
 
         if (!unit_id || unit_id === '') {
@@ -92,7 +92,7 @@ class PaymentService {
                  await logAction(userId, 'CREATE', 'payment', id, logData, ip);
 
                  // Notify unit residents
-                 NotificationService.notifyNewPayment({ id, type, amount, description, unit_id: unit.id }, userId).catch(err => {
+                 NotificationService.notifyNewPayment({ id, type, amount, description, unit_id: unit.id }, userId, reqPushEndpoint).catch(err => {
                      console.error(`Failed to send payment notifications for unit ${unit.id}:`, err);
                  });
              }
@@ -114,7 +114,7 @@ class PaymentService {
         await logAction(userId, 'CREATE', 'payment', id, logData, ip);
 
         // Notify unit residents
-        NotificationService.notifyNewPayment({ id, type, amount, description, unit_id }, userId).catch(err => {
+        NotificationService.notifyNewPayment({ id, type, amount, description, unit_id }, userId, reqPushEndpoint).catch(err => {
             console.error('Failed to send payment notifications:', err);
         });
 
@@ -187,7 +187,7 @@ class PaymentService {
         await logAction(userId, 'DELETE', 'payment', id, payment, ip);
     }
 
-    async submitProof(id, proof, userId, userRole, userUnitId, ip) {
+    async submitProof(id, proof, userId, userRole, userUnitId, ip, reqPushEndpoint = null) {
         const payment = await PaymentRepository.findById(id);
         if (!payment) throw new Error("Payment not found");
 
@@ -208,6 +208,11 @@ class PaymentService {
 
         const newData = { ...oldData, proof: '(file)', type: 'income' };
         await logAction(userId, 'UPDATE', 'payment', id, { old: oldData, new: newData }, ip);
+
+        // Notify about proof submission (status change)
+        NotificationService.notifyNewPayment({ id, type: 'income', amount: oldData.amount, description: oldData.description, unit_id: oldData.unit_id }, userId, reqPushEndpoint).catch(err => {
+            console.error('Failed to send payment proof notifications:', err);
+        });
     }
 }
 

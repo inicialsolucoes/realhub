@@ -13,9 +13,10 @@ if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
 }
 
 class NotificationService {
-    async notify({ title, body, unitId = null, excludeUserId = null, data = {} }) {
+    async notify({ title, body, unitId = null, excludeUserId = null, excludeEndpoint = null, data = {} }) {
         try {
             console.log(`Starting notification process: ${title}`);
+            console.log(`Excluding user: ${excludeUserId}, Excluding endpoint: ${excludeEndpoint}`);
             
             // 1. Fetch relevant users for Email
             let userQuery = 'SELECT id, email, name FROM users WHERE 1=1';
@@ -51,7 +52,12 @@ class NotificationService {
                 subscriptions = await PushSubscriptionRepository.findAll();
             }
             
-            console.log(`Found ${subscriptions.length} push subscriptions.`);
+            // Filter out the excluding endpoint
+            if (excludeEndpoint) {
+                subscriptions = subscriptions.filter(sub => sub.endpoint !== excludeEndpoint);
+            }
+            
+            console.log(`Found ${subscriptions.length} push subscriptions after filtering.`);
 
             // 4. Send Push Notifications (Async)
             const payload = JSON.stringify({
@@ -86,7 +92,7 @@ class NotificationService {
         }
     }
 
-    async notifyNewPost(post, creatorId) {
+    async notifyNewPost(post, creatorId, excludeEndpoint = null) {
         const title = 'Nova Publicação';
         const body = post.title;
         const unitId = post.unit_id; // If null, it's for everyone
@@ -96,11 +102,12 @@ class NotificationService {
             body,
             unitId,
             excludeUserId: creatorId,
+            excludeEndpoint,
             data: { url: `/posts/${post.id}` }
         });
     }
 
-    async notifyNewPayment(payment, creatorId) {
+    async notifyNewPayment(payment, creatorId, excludeEndpoint = null) {
         const title = 'Novo Pagamento Registrado';
         const typeLabel = payment.type === 'income' ? 'Receita' : 'Despesa';
         const body = `${typeLabel}: ${payment.description} - R$ ${payment.amount}`;
@@ -111,6 +118,7 @@ class NotificationService {
             body,
             unitId,
             excludeUserId: creatorId,
+            excludeEndpoint,
             data: { url: `/payments/${payment.id}` }
         });
     }
