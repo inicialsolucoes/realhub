@@ -37,3 +37,36 @@ exports.getRevenueReport = async (req, res) => {
         res.status(500).json({ message: 'Erro ao gerar relatório', error: error.message });
     }
 };
+
+exports.getExpensesReport = async (req, res) => {
+    try {
+        if (req.userRole !== 'admin') {
+            return res.status(403).json({ message: 'Acesso negado' });
+        }
+
+        const { month, year } = req.query;
+        const filterMonth = month === 'all' || !month ? null : month;
+        const filterYear = year === 'all' || !year ? null : year;
+
+        const { details, totals } = await ReportRepository.getExpensesReport({ 
+            month: filterMonth, 
+            year: filterYear 
+        });
+
+        res.json({
+            data: details,
+            totals: {
+                totalGasto: totals.total_gasto || 0,
+                totalReceita: totals.total_receita || 0,
+                totalPendente: totals.total_pendente || 0
+            },
+            filters: {
+                month: filterMonth ? parseInt(filterMonth) : 'all',
+                year: filterYear ? parseInt(filterYear) : 'all'
+            }
+        });
+    } catch (error) {
+        console.error('Error in getExpensesReport:', error);
+        res.status(500).json({ message: 'Erro ao gerar relatório de gastos', error: error.message });
+    }
+};

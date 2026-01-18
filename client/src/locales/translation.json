@@ -296,6 +296,17 @@
             "paid_total": "Total Pago",
             "balance": "Saldo",
             "total_arrecadado": "Total Arrecadado"
+        },
+        "expenses": {
+            "menu": "Gastos",
+            "title": "Relatório de Gastos",
+            "total_gasto": "Gasto Total",
+            "total_receita": "Receita Total",
+            "total_pendente": "Receita Pendente",
+            "balance": "Saldo",
+            "cost_center": "Centro de Custo",
+            "qtd_gasto": "Qtd Gasto",
+            "total_gasto_col": "Total Gasto"
         }
     }
 }

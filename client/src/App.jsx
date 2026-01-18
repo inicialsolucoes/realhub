@@ -22,6 +22,7 @@ import PostsList from './pages/Posts/List';
 import PostForm from './pages/Posts/Form';
 import PostDetails from './pages/Posts/Details';
 import RevenueReport from './pages/Reports/Revenue';
+import ExpensesReport from './pages/Reports/Expenses';
 import { Loader2 } from 'lucide-react';
 
 function PrivateRoute({ children }) {
@@ -92,6 +93,7 @@ export default function App() {
 
         {/* Reports Routes */}
         <Route path="reports/revenue" element={<RevenueReport />} />
+        <Route path="reports/expenses" element={<ExpensesReport />} />
       </Route>
     </Routes>
   );

@@ -1,6 +1,6 @@
 import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Users, Building2, Wallet, LogOut, Menu, X, Folder, ClipboardList, Bell, BarChart, ChevronDown, Table } from 'lucide-react';
+import { LayoutDashboard, Users, Building2, Wallet, LogOut, Menu, X, Folder, ClipboardList, Bell, BarChart, ChevronDown, Table, TrendingDown } from 'lucide-react';
 import { useState } from 'react';
 import { clsx } from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -32,7 +32,8 @@ export default function DashboardLayout() {
             path: '/reports',
             roles: ['admin'],
             subItems: [
-                { label: t('reports.revenue.menu') || 'Relatório de Arrecadação', icon: Table, path: '/reports/revenue' }
+                { label: t('reports.revenue.menu') || 'Arrecadação', icon: Table, path: '/reports/revenue' },
+                { label: t('reports.expenses.menu') || 'Gastos', icon: TrendingDown, path: '/reports/expenses' }
             ]
         },
         { label: t('app.logs') || 'Logs de Atividade', icon: ClipboardList, path: '/logs', roles: ['admin'] },
